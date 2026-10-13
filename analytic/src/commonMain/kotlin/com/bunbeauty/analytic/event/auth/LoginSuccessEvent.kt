@@ -6,7 +6,7 @@ import com.bunbeauty.analytic.event.FoodDeliveryEvent
 class LoginSuccessEvent(direction: String) :
     FoodDeliveryEvent(
         category = "auth",
-        action = "login_ok",
+        action = "login_ok_",
         params =
             listOf(
                 EventParameter(
