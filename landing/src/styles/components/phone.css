@@ -1,5 +1,5 @@
 .bb-stage {
-  min-height: 540px;
+  min-height: 620px;
   position: relative;
 }
 
@@ -36,204 +36,16 @@
   width: 11px;
 }
 
-.bb-phone {
-  background: hsl(var(--bb-paper));
-  border: 8px solid hsl(var(--bb-ink-soft));
-  border-radius: 41px;
-  box-shadow: 20px 27px 0 hsl(0 0% 0% / 0.18), 0 30px 90px hsl(0 0% 0% / 0.4);
-  color: hsl(var(--bb-ink));
-  height: 535px;
-  overflow: hidden;
+.bb-guest-screen {
+  display: block;
+  filter: drop-shadow(20px 27px 0 hsl(0 0% 0% / 0.12)) drop-shadow(0 30px 60px hsl(0 0% 0% / 0.28));
+  height: auto;
   position: absolute;
-  right: 12%;
+  right: 10%;
   top: 0;
   transform: rotate(4deg);
   width: 269px;
   z-index: 2;
-}
-
-.bb-phone::before {
-  background: hsl(var(--bb-ink-soft));
-  border-radius: 0 0 12px 12px;
-  content: "";
-  height: 19px;
-  left: 50%;
-  position: absolute;
-  top: -1px;
-  transform: translateX(-50%);
-  width: 95px;
-  z-index: 3;
-}
-
-.bb-phone-top {
-  display: flex;
-  font-size: 9px;
-  justify-content: space-between;
-  padding: 30px 18px 12px;
-}
-
-.bb-phone-brand {
-  font-family: var(--app-font-display);
-  font-size: 23px;
-  font-weight: 700;
-  letter-spacing: -0.09em;
-}
-
-.bb-phone-brand span {
-  color: hsl(var(--bb-ink));
-}
-
-.bb-phone-user {
-  align-items: center;
-  background: hsl(var(--bb-ink) / 0.08);
-  border-radius: 50%;
-  display: flex;
-  height: 25px;
-  justify-content: center;
-  width: 25px;
-}
-
-.bb-phone-banner {
-  background: hsl(var(--bb-lime));
-  border-radius: 14px;
-  height: 96px;
-  margin: 0 12px;
-  overflow: hidden;
-  padding: 15px;
-  position: relative;
-}
-
-.bb-phone-banner strong {
-  display: block;
-  font-family: var(--app-font-display);
-  font-size: 19px;
-  letter-spacing: -0.07em;
-  line-height: 0.9;
-  max-width: 125px;
-}
-
-.bb-phone-banner small {
-  bottom: 12px;
-  color: hsl(var(--bb-ink) / 0.78);
-  font-size: 7px;
-  position: absolute;
-}
-
-.bb-cup {
-  border: 3px solid hsl(var(--bb-ink));
-  border-radius: 3px 3px 10px 10px;
-  bottom: 8px;
-  height: 52px;
-  position: absolute;
-  right: 27px;
-  transform: rotate(12deg);
-  width: 39px;
-}
-
-.bb-cup::before {
-  border: 3px solid hsl(var(--bb-ink));
-  border-bottom: 0;
-  border-radius: 12px 12px 0 0;
-  content: "";
-  height: 11px;
-  left: 5px;
-  position: absolute;
-  top: -12px;
-  width: 25px;
-}
-
-.bb-cup::after {
-  background: hsl(var(--bb-ink));
-  border-radius: 50%;
-  content: "";
-  height: 12px;
-  left: 10px;
-  position: absolute;
-  top: 10px;
-  width: 12px;
-}
-
-.bb-phone-section {
-  align-items: baseline;
-  display: flex;
-  justify-content: space-between;
-  padding: 19px 17px 9px;
-}
-
-.bb-phone-section h3 {
-  font-family: var(--app-font-display);
-  font-size: var(--bb-fs-h4);
-  letter-spacing: -0.06em;
-  margin: 0;
-}
-
-.bb-phone-section span {
-  color: hsl(var(--bb-ink) / 0.62);
-  font-size: 8px;
-}
-
-.bb-menu-row {
-  align-items: center;
-  display: flex;
-  gap: 9px;
-  padding: 7px 17px;
-}
-
-.bb-food-art {
-  align-items: center;
-  background: hsl(var(--bb-ink) / 0.1);
-  border-radius: 9px;
-  display: flex;
-  height: 54px;
-  justify-content: center;
-  overflow: hidden;
-  position: relative;
-  width: 54px;
-}
-
-.bb-food-art::before {
-  background: hsl(var(--bb-lime));
-  border-radius: 48% 52% 48% 52%;
-  content: "";
-  height: 28px;
-  transform: rotate(-14deg);
-  width: 34px;
-}
-
-.bb-menu-row:nth-of-type(2) .bb-food-art::before {
-  background: hsl(var(--bb-ink) / 0.18);
-  border-radius: 50%;
-  height: 29px;
-  width: 29px;
-}
-
-.bb-menu-row:nth-of-type(3) .bb-food-art::before {
-  background: hsl(var(--bb-lime) / 0.45);
-  border-radius: 50% 40% 50% 40%;
-  height: 30px;
-  width: 34px;
-}
-
-.bb-menu-meta {
-  flex: 1;
-}
-
-.bb-menu-meta strong {
-  display: block;
-  font-size: 10px;
-  font-weight: 800;
-}
-
-.bb-menu-meta small {
-  color: hsl(var(--bb-ink) / 0.62);
-  display: block;
-  font-size: 8px;
-  margin-top: 3px;
-}
-
-.bb-menu-price {
-  font-size: 10px;
-  font-weight: 800;
 }
 
 .bb-floating-tag {
@@ -260,13 +72,6 @@
 .bb-on-lime .bb-floating-tag {
   background: hsl(var(--bb-ink));
   color: hsl(var(--bb-paper));
-}
-
-.bb-phone-screen {
-  display: block;
-  height: 100%;
-  object-fit: cover;
-  width: 100%;
 }
 
 .bb-admin-stage {
@@ -315,7 +120,7 @@
   .bb-stage {
     margin: 30px auto 0;
     max-width: 510px;
-    min-height: 540px;
+    min-height: 620px;
   }
 
   .bb-admin-stage {
@@ -343,7 +148,7 @@
     width: 115%;
   }
 
-  .bb-phone {
+  .bb-guest-screen {
     right: 8%;
   }
 

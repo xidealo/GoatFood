@@ -1,4 +1,4 @@
-package com.bunbeauty.shared.ui.screen.main
+package com.bunbeauty.designsystem.ui.element.footer
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable

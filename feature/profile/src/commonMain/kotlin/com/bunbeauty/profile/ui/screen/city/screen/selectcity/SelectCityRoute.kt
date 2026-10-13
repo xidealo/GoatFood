@@ -10,7 +10,6 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.Icon
@@ -31,6 +30,8 @@ import com.bunbeauty.designsystem.theme.bold
 import com.bunbeauty.designsystem.ui.LocalBottomBarPadding
 import com.bunbeauty.designsystem.ui.element.FoodDeliveryScaffold
 import com.bunbeauty.designsystem.ui.element.button.MainButton
+import com.bunbeauty.designsystem.ui.element.footer.WebSiteFooter
+import com.bunbeauty.designsystem.ui.element.footer.WebStickyFooterLazyColumn
 import com.bunbeauty.designsystem.ui.screen.ErrorScreen
 import com.bunbeauty.designsystem.ui.screen.LoadingScreen
 import com.bunbeauty.profile.presentation.selectcity.SelectCityDataState
@@ -160,7 +161,7 @@ private fun SelectCityListScreen(
     viewState: SelectCityViewState,
     onAction: (SelectCityDataState.Action) -> Unit,
 ) {
-    LazyColumn(
+    WebStickyFooterLazyColumn(
         modifier = Modifier.fillMaxSize(),
         verticalArrangement = spacedBy(8.dp),
         contentPadding = PaddingValues(FoodDeliveryTheme.dimensions.mediumSpace),
@@ -231,6 +232,8 @@ private fun SelectCitySingleCityScreen(
         )
 
         Spacer(modifier = Modifier.weight(weight = 1f))
+
+        WebSiteFooter()
 
         MainButton(
             modifier =

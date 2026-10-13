@@ -1,11 +1,12 @@
 import { type FormEvent, type ReactNode, useEffect, useRef, useState } from 'react';
 import { ArrowDownRight, ArrowRight, Check, ChevronDown, Menu, Plus, X } from 'lucide-react';
-import { Route, Switch, useLocation, Router as WouterRouter } from 'wouter';
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { Route, Switch, useLocation, Router as WouterRouter, Link } from 'wouter';import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { ErrorBoundary } from '@/components/error-boundary';
 import { Toaster } from '@/components/ui/toaster';
 import { TooltipProvider } from '@/components/ui/tooltip';
 import NotFound from '@/pages/not-found';
+import LegalDocumentPage from '@/pages/legal-document';
+import { getLegalDocument } from '@/content/legal';
 
 const queryClient = new QueryClient();
 
@@ -14,6 +15,31 @@ const faqs = [
   ['Как заказывает гость?', 'Через ваше приложение в App Store и Google Play или через сайт. Меню с фото, доставка или самовывоз – как настроите на смене.'],
   ['Как подключиться?', 'Оставьте заявку, и мы созвонимся на 20 минут. После этого соберём первую версию меню и запустим её в течение нескольких рабочих дней.'],
   ['Какая комиссия за заказ?', 'Платформа берёт 3% с заказа. Никаких скрытых платежей, платы за установку или длинных контрактов.'],
+  ['В каких регионах вы работаете?', 'Работаем в Тверской, Московской и Ярославской областях — от Твери и Москвы до Ярославля и городов вокруг.'],
+  ['Сколько стоит разработать приложение для доставки еды?', 'Запуск и разработка под ваш бренд бесплатны. Вы платите только комиссию 3% с заказа — без абонентской платы и платы за установку.'],
+  ['Чем GoatFood отличается от агрегаторов вроде Яндекс Еды?', 'У вас своё приложение и сайт под вашим брендом, без высокой комиссии агрегатора. Гость заказывает напрямую у вас, а не через чужой маркетплейс.'],
+  ['Нужно ли маленькому кафе своё приложение?', 'Да, если хотите свою доставку или самовывоз без комиссии агрегатора. Даже небольшому кафе удобно принимать заказы в своём приложении и вести их в CRM администратора.'],
+];
+
+const geoRegions = [
+  {
+    title: 'Тверская область',
+    label: 'домашний регион',
+    tone: 'lime' as const,
+    cities: ['Тверь', 'Ржев', 'Торжок', 'Вышний Волочёк', 'Кимры', 'Конаково', 'Бологое', 'Удомля', 'Осташков', 'Бежецк', 'Кашин', 'Лихославль'],
+  },
+  {
+    title: 'Московская область и Москва',
+    label: 'столичный регион',
+    tone: 'paper' as const,
+    cities: ['Москва', 'Химки', 'Мытищи', 'Балашиха', 'Подольск', 'Красногорск', 'Одинцово', 'Люберцы', 'Королёв', 'Домодедово', 'Щёлково', 'Сергиев Посад', 'Клин', 'Дмитров'],
+  },
+  {
+    title: 'Ярославская область',
+    label: 'золотое кольцо',
+    tone: 'paper' as const,
+    cities: ['Ярославль', 'Рыбинск', 'Переславль-Залесский', 'Тутаев', 'Углич', 'Ростов', 'Гаврилов-Ям', 'Данилов'],
+  },
 ];
 
 function Logo() {
@@ -24,16 +50,11 @@ function PhonePreview() {
   return (
     <div className="bb-stage" aria-label="Предпросмотр мобильного меню GoatFood" data-testid="preview-phone">
       <div className="bb-orbit" />
-      <div className="bb-phone">
-        <div className="bb-phone-top"><span>9:41</span><span className="bb-phone-user" aria-hidden="true" /></div>
-        <div className="bb-phone-banner"><strong>Сделано<br />с заботой</strong><small>Скидка 15% на первый заказ</small><span className="bb-cup" /></div>
-        <div className="bb-phone-section"><h3>Меню</h3><span>Популярное</span></div>
-        <div className="bb-menu-row"><span className="bb-food-art" /><span className="bb-menu-meta"><strong>Флэт уайт</strong><small>двойной эспрессо, молоко</small></span><span className="bb-menu-price">250 ₽</span></div>
-        <div className="bb-menu-row"><span className="bb-food-art" /><span className="bb-menu-meta"><strong>Чизкейк баскский</strong><small>сливочный сыр, ваниль</small></span><span className="bb-menu-price">340 ₽</span></div>
-        <div className="bb-menu-row"><span className="bb-food-art" /><span className="bb-menu-meta"><strong>Матча-тоник</strong><small>матча, тоник, лайм</small></span><span className="bb-menu-price">290 ₽</span></div>
-        <div className="bb-phone-section"><h3>Комбо дня</h3><span>ещё 4 позиции</span></div>
-        <div className="bb-menu-row"><span className="bb-food-art" /><span className="bb-menu-meta"><strong>Кофе + круассан</strong><small>идеальное начало</small></span><span className="bb-menu-price">420 ₽</span></div>
-      </div>
+      <img
+        className="bb-guest-screen"
+        src="/guest-menu.png"
+        alt="Меню гостя в мобильном приложении GoatFood"
+      />
       <div className="bb-floating-tag"><span>ваш бренд</span>в кармане</div>
     </div>
   );
@@ -138,6 +159,7 @@ function Home() {
           <nav className={`bb-nav ${menuOpen ? 'is-open' : ''}`} aria-label="Основная навигация">
             <a href="#product" onClick={() => setMenuOpen(false)} data-testid="link-product">Продукт</a>
             <a href="#conditions" onClick={() => setMenuOpen(false)} data-testid="link-conditions">Условия</a>
+            <a href="#geo" onClick={() => setMenuOpen(false)} data-testid="link-geo">География</a>
             <a href="#faq" onClick={() => setMenuOpen(false)} data-testid="link-faq">Вопросы</a>
           </nav>
           <button className="bb-menu" onClick={() => setMenuOpen(!menuOpen)} aria-label="Открыть меню" aria-expanded={menuOpen} data-testid="button-mobile-menu"><Menu size={22} /></button>
@@ -148,9 +170,9 @@ function Home() {
       <section className="bb-container bb-hero" id="top">
         <div className="bb-hero-grid">
           <div>
-            <div className="bb-eyebrow bb-reveal">своё приложение и сайт для кафе</div>
+            <div className="bb-eyebrow bb-reveal">своё приложение и сайт доставки еды для кафе</div>
             <h1 className="bb-display bb-reveal bb-delay-1">Кафе,<br />которое <em>заказывают</em><br />с телефона</h1>
-            <p className="bb-lede bb-reveal bb-delay-2">GoatFood – платформа заказов для кафе. Гость оформляет заказ в вашем приложении или на сайте, администратор ведёт его в отдельном CRM приложении.</p>
+            <p className="bb-lede bb-reveal bb-delay-2">GoatFood – мобильное приложение для доставки еды и сайт под брендом вашего кафе. Работаем в Тверской, Московской и Ярославской областях: гость заказывает у вас, администратор ведёт заказ в CRM.</p>
             <div className="bb-hero-actions bb-reveal bb-delay-3"><button className="bb-button bb-button-primary" onClick={openContact} data-testid="button-hero-contact">Запустить GoatFood <ArrowRight size={16} /></button><a className="bb-button bb-button-ghost" href="#product" data-testid="link-hero-product">Посмотреть как это работает <ArrowDownRight size={17} /></a></div>
             <p className="bb-small-note">приложение для гостя ·  CRM приложение для администратора</p>
             <p className="bb-store-links">
@@ -189,9 +211,42 @@ function Home() {
         </div>
       </section>
 
+      <section className="bb-geo bb-section bb-on-dark" id="geo">
+        <div className="bb-container">
+          <span className="bb-section-label">03 / география</span>
+          <h2 className="bb-display bb-section-heading">Работаем в Тверской, Московской и Ярославской областях</h2>
+          <p className="bb-geo-lede">Мобильное приложение для доставки еды и сайт под брендом вашего кафе — в областных центрах и небольших городах. Гости заказывают напрямую у вас, без комиссии агрегатора.</p>
+          <div className="bb-geo-grid">
+            {geoRegions.map((region) => (
+              <article className={`bb-geo-card bb-card-${region.tone}`} key={region.title}>
+                <div className="bb-geo-card-top">
+                  <span className="bb-label">{region.label}</span>
+                  <span className="bb-geo-count">{region.cities.length} городов</span>
+                </div>
+                <h3>{region.title}</h3>
+                <div className="bb-geo-cities">
+                  {region.cities.map((city) => (
+                    <span className="bb-geo-city" key={city}>{city}</span>
+                  ))}
+                </div>
+              </article>
+            ))}
+          </div>
+          <div className="bb-geo-cta bb-card-paper">
+            <div>
+              <strong>Вашего города нет в списке?</strong>
+              <span>Напишите — подскажем, когда сможем запустить у вас.</span>
+            </div>
+            <button className="bb-button bb-button-primary" onClick={openContact} data-testid="button-geo-contact">
+              Обсудить запуск <ArrowRight size={15} />
+            </button>
+          </div>
+        </div>
+      </section>
+
       <section className="bb-faq-section bb-section bb-on-lime" id="faq">
         <div className="bb-container bb-faq-wrap">
-          <div><span className="bb-section-label">03 / вопросы</span><h2 className="bb-display bb-section-heading">Всё важное –<br /><em>здесь</em></h2></div>
+          <div><span className="bb-section-label">04 / вопросы</span><h2 className="bb-display bb-section-heading">Всё важное –<br /><em>здесь</em></h2></div>
           <div><div className="bb-faq-list">{faqs.map(([question, answer], index) => <div className="bb-faq-item" key={question}><button className="bb-faq-question" onClick={() => setOpenFaq(openFaq === index ? null : index)} aria-expanded={openFaq === index} data-testid={`button-faq-${index}`}><span>{question}</span>{openFaq === index ? <Plus size={18} /> : <ChevronDown size={18} />}</button><div className={`bb-faq-answer ${openFaq === index ? 'open' : ''}`}><p>{answer}</p></div></div>)}</div><div className="bb-faq-side bb-card-dark"><span className="bb-section-label">не нашли ответ?</span><p>Расскажем всё про ваш формат, город и меню – без презентаций на 48 слайдов.</p><button className="bb-button bb-button-primary" onClick={openContact} data-testid="button-faq-contact">Задать вопрос <ArrowRight size={15} /></button></div></div>
         </div>
       </section>
@@ -206,8 +261,12 @@ function Home() {
             <a href="#top" data-testid="link-footer-home"><Logo /></a>
             <a href="mailto:shavl.mark@yandex.ru" data-testid="link-email">shavl.mark@yandex.ru</a>
           </div>
-          <p className="bb-footer-legal">© 2026 GoatFood · приложения и сайт заказов для кафе</p>
-          <p className="bb-footer-legal">ИП Шавловский Марк Вячеславович · ОГРНИП 322695200049377 · ИНН 691010434605</p>
+          <nav className="bb-footer-links" aria-label="Юридические документы">
+            <Link href="/user-agreement" data-testid="link-user-agreement">Пользовательское соглашение</Link>
+            <Link href="/privacy-policy" data-testid="link-privacy-policy">Политика конфиденциальности</Link>
+            <Link href="/terms-of-service" data-testid="link-terms-of-service">Условия предоставления услуг</Link>
+          </nav>
+          <p className="bb-footer-legal">© 2026 ИП Шавловский Марк Вячеславович · ОГРНИП 322695200049377 · ИНН 691010434605</p>
         </footer>
       </div>
       {modalOpen && <ContactModal onClose={() => setModalOpen(false)} />}
@@ -220,8 +279,24 @@ function RoutedErrorBoundary({ children }: { children: ReactNode }) {
   return <ErrorBoundary resetKey={location}>{children}</ErrorBoundary>;
 }
 
+function LegalRoute({ slug }: { slug: string }) {
+  const document = getLegalDocument(slug);
+  if (!document) return <NotFound />;
+  return <LegalDocumentPage document={document} />;
+}
+
 function Router() {
-  return <RoutedErrorBoundary><Switch><Route path="/" component={Home} /><Route component={NotFound} /></Switch></RoutedErrorBoundary>;
+  return (
+    <RoutedErrorBoundary>
+      <Switch>
+        <Route path="/" component={Home} />
+        <Route path="/user-agreement">{() => <LegalRoute slug="user-agreement" />}</Route>
+        <Route path="/privacy-policy">{() => <LegalRoute slug="privacy-policy" />}</Route>
+        <Route path="/terms-of-service">{() => <LegalRoute slug="terms-of-service" />}</Route>
+        <Route component={NotFound} />
+      </Switch>
+    </RoutedErrorBoundary>
+  );
 }
 
 function App() {

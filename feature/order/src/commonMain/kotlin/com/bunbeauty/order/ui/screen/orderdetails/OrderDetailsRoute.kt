@@ -3,7 +3,6 @@ package com.bunbeauty.order.ui.screen.orderdetails
 import androidx.compose.animation.Crossfade
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement.Absolute.spacedBy
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
@@ -11,7 +10,6 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -32,6 +30,7 @@ import com.bunbeauty.designsystem.ui.element.FoodDeliveryScaffold
 import com.bunbeauty.designsystem.ui.element.card.DiscountCard
 import com.bunbeauty.designsystem.ui.element.card.FoodDeliveryCard
 import com.bunbeauty.designsystem.ui.element.card.FoodDeliveryItem
+import com.bunbeauty.designsystem.ui.element.footer.WebStickyFooterLazyColumn
 import com.bunbeauty.designsystem.ui.element.surface.FoodDeliverySurface
 import com.bunbeauty.designsystem.ui.screen.ErrorScreen
 import com.bunbeauty.designsystem.ui.screen.LoadingScreen
@@ -146,54 +145,50 @@ private fun OrderDetailsScreen(
 @Composable
 private fun OrderDetailsSuccessScreen(state: OrderDetailsViewState) {
     Column(modifier = Modifier.fillMaxSize()) {
-        Box(
+        WebStickyFooterLazyColumn(
             modifier =
                 Modifier
                     .fillMaxWidth()
                     .weight(1f),
+            contentPadding =
+                PaddingValues(
+                    bottom =
+                        FoodDeliveryTheme.dimensions.screenContentSpace +
+                            LocalBottomBarPadding.current,
+                ),
+            verticalArrangement = spacedBy(8.dp),
         ) {
-            LazyColumn(
-                modifier = Modifier.fillMaxSize(),
-                contentPadding =
-                    PaddingValues(
-                        bottom =
-                            FoodDeliveryTheme.dimensions.screenContentSpace +
-                                LocalBottomBarPadding.current,
-                    ),
-                verticalArrangement = spacedBy(8.dp),
-            ) {
-                item(key = "OrderStatusBar") {
-                    state.orderInfo?.let { orderInfo ->
-                        OrderStatusBar(
-                            orderStatus = orderInfo.status,
-                            orderStatusName = orderInfo.statusName,
-                        )
-                    }
+            item(key = "OrderStatusBar") {
+                state.orderInfo?.let { orderInfo ->
+                    OrderStatusBar(
+                        orderStatus = orderInfo.status,
+                        orderStatusName = orderInfo.statusName,
+                    )
                 }
+            }
 
-                item(key = "OrderInfoCard") {
-                    state.orderInfo?.let { orderInfo ->
-                        OrderInfoCard(
-                            modifier =
-                                Modifier
-                                    .fillMaxWidth(),
-                            orderInfo = orderInfo,
-                        )
-                    }
+            item(key = "OrderInfoCard") {
+                state.orderInfo?.let { orderInfo ->
+                    OrderInfoCard(
+                        modifier =
+                            Modifier
+                                .fillMaxWidth(),
+                        orderInfo = orderInfo,
+                    )
                 }
+            }
 
-                items(
-                    items = state.orderProductItemList,
-                    key = { orderProductItem ->
-                        orderProductItem.key
-                    },
-                ) { orderProductItem ->
-                    FoodDeliveryItem(needDivider = !orderProductItem.isLast) {
-                        OrderProductItem(
-                            modifier = Modifier.padding(horizontal = 16.dp),
-                            orderProductItem = orderProductItem,
-                        )
-                    }
+            items(
+                items = state.orderProductItemList,
+                key = { orderProductItem ->
+                    orderProductItem.key
+                },
+            ) { orderProductItem ->
+                FoodDeliveryItem(needDivider = !orderProductItem.isLast) {
+                    OrderProductItem(
+                        modifier = Modifier.padding(horizontal = 16.dp),
+                        orderProductItem = orderProductItem,
+                    )
                 }
             }
         }

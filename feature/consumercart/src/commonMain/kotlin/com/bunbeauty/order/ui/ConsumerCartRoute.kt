@@ -49,6 +49,7 @@ import com.bunbeauty.designsystem.ui.element.button.MainButton
 import com.bunbeauty.designsystem.ui.element.button.SecondaryButton
 import com.bunbeauty.designsystem.ui.element.card.DiscountCard
 import com.bunbeauty.designsystem.ui.element.card.FoodDeliveryItem
+import com.bunbeauty.designsystem.ui.element.footer.webSiteFooterItem
 import com.bunbeauty.designsystem.ui.element.surface.FoodDeliverySurface
 import com.bunbeauty.designsystem.ui.screen.EmptyScreen
 import com.bunbeauty.designsystem.ui.screen.ErrorScreen
@@ -325,6 +326,8 @@ private fun ConsumerCartSuccessScreen(
                 onAction = onAction,
                 animatedContentScope = animatedContentScope,
             )
+
+            webSiteFooterItem(modifier = Modifier.padding(top = 24.dp))
         }
 
         BottomPanel(

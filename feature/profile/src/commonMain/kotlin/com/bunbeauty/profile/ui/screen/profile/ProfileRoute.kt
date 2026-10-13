@@ -9,9 +9,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -31,6 +29,8 @@ import com.bunbeauty.designsystem.ui.LocalBottomBarPadding
 import com.bunbeauty.designsystem.ui.element.FoodDeliveryScaffold
 import com.bunbeauty.designsystem.ui.element.button.MainButton
 import com.bunbeauty.designsystem.ui.element.card.NavigationIconCardWithDivider
+import com.bunbeauty.designsystem.ui.element.footer.WebSiteFooter
+import com.bunbeauty.designsystem.ui.element.footer.WebStickyFooterColumn
 import com.bunbeauty.designsystem.ui.screen.ErrorScreen
 import com.bunbeauty.designsystem.ui.screen.LoadingScreen
 import com.bunbeauty.profile.presentation.profile.ProfileState
@@ -250,12 +250,7 @@ private fun AuthorizedProfileScreen(
     state: ProfileViewState,
     onAction: (ProfileState.Action) -> Unit,
 ) {
-    Column(
-        modifier =
-            Modifier
-                .fillMaxSize()
-                .verticalScroll(rememberScrollState()),
-    ) {
+    WebStickyFooterColumn {
         NavigationIconCardWithDivider(
             modifier = Modifier.fillMaxWidth(),
             iconId = Res.drawable.ic_settings,
@@ -295,10 +290,7 @@ private fun UnauthorizedProfileScreen(
     state: ProfileViewState,
 ) {
     Column(
-        modifier =
-            Modifier
-                .fillMaxSize()
-                .verticalScroll(rememberScrollState()),
+        modifier = Modifier.fillMaxSize(),
     ) {
         ProfileInfoCards(
             modifier = Modifier,
@@ -351,6 +343,8 @@ private fun UnauthorizedProfileScreen(
             )
         }
         Spacer(modifier = Modifier.weight(1f))
+
+        WebSiteFooter()
 
         Spacer(modifier = Modifier.height(FoodDeliveryTheme.dimensions.scrollScreenBottomSpace))
     }

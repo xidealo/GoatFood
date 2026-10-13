@@ -4,7 +4,6 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -34,6 +33,7 @@ import com.bunbeauty.designsystem.theme.logoMedium
 import com.bunbeauty.designsystem.ui.LocalBottomBarPadding
 import com.bunbeauty.designsystem.ui.element.FoodDeliveryScaffold
 import com.bunbeauty.designsystem.ui.element.button.LoadingButton
+import com.bunbeauty.designsystem.ui.element.footer.WebSiteFooter
 import com.bunbeauty.designsystem.ui.element.textfield.FoodDeliveryTextField
 import com.bunbeauty.designsystem.ui.element.textfield.FoodDeliveryTextFieldDefaults
 import com.bunbeauty.designsystem.ui.getIsImeVisible
@@ -123,72 +123,79 @@ private fun LoginScreen(
             )
         },
     ) {
-        Column(
-            modifier =
-                Modifier
-                    .fillMaxSize()
-                    .verticalScroll(rememberScrollState())
-                    .padding(FoodDeliveryTheme.dimensions.mediumSpace),
-            horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.Center,
-        ) {
-            BoxWithConstraints {
-                val constraints = this
-                if (constraints.maxHeight > logoBoxHeightLimit) {
-                    logoMedium?.let { logo ->
-                        Image(
-                            modifier = Modifier.height(height = 156.dp),
-                            painter = painterResource(resource = logo),
-                            contentDescription = stringResource(resource = Res.string.description_login_logo),
-                        )
-                    }
-                }
-            }
-            Text(
-                modifier = Modifier.padding(top = FoodDeliveryTheme.dimensions.mediumSpace),
-                text = stringResource(Res.string.msg_login_info),
-                style = FoodDeliveryTheme.typography.bodyLarge,
-                color = FoodDeliveryTheme.colors.mainColors.onSurface,
-            )
-
-            val focusRequester =
-                remember {
-                    FocusRequester()
-                }
-            FoodDeliveryTextField(
+        Column(modifier = Modifier.fillMaxSize()) {
+            Column(
                 modifier =
                     Modifier
+                        .weight(1f)
                         .fillMaxWidth()
-                        .padding(top = FoodDeliveryTheme.dimensions.mediumSpace),
-                focusRequester = focusRequester,
-                value =
-                    TextFieldValue(
-                        text = viewState.phoneNumber,
-                        selection = TextRange(viewState.phoneNumberCursorPosition),
-                    ),
-                labelStringId = Res.string.hint_login_phone,
-                keyboardOptions =
-                    FoodDeliveryTextFieldDefaults.keyboardOptionsDefault(
-                        keyboardType = KeyboardType.Phone,
-                        imeAction = ImeAction.Done,
-                    ),
-                onValueChange = { value ->
-                    onAction(Login.Action.ChangePhoneNumber(value.text, value.selection.start))
-                },
-                errorMessageId =
-                    if (viewState.hasPhoneError) {
-                        Res.string.error_login_phone
-                    } else {
-                        null
-                    },
-            )
-            Spacer(
-                modifier = Modifier.height(FoodDeliveryTheme.dimensions.scrollScreenBottomSpace),
-            )
+                        .verticalScroll(rememberScrollState())
+                        .padding(FoodDeliveryTheme.dimensions.mediumSpace),
+                horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.Center,
+            ) {
+                BoxWithConstraints {
+                    val constraints = this
+                    if (constraints.maxHeight > logoBoxHeightLimit) {
+                        logoMedium?.let { logo ->
+                            Image(
+                                modifier = Modifier.height(height = 156.dp),
+                                painter = painterResource(resource = logo),
+                                contentDescription = stringResource(resource = Res.string.description_login_logo),
+                            )
+                        }
+                    }
+                }
+                Text(
+                    modifier = Modifier.padding(top = FoodDeliveryTheme.dimensions.mediumSpace),
+                    text = stringResource(Res.string.msg_login_info),
+                    style = FoodDeliveryTheme.typography.bodyLarge,
+                    color = FoodDeliveryTheme.colors.mainColors.onSurface,
+                )
 
-            LaunchedEffect(Unit) {
-                focusRequester.requestFocus()
+                val focusRequester =
+                    remember {
+                        FocusRequester()
+                    }
+                FoodDeliveryTextField(
+                    modifier =
+                        Modifier
+                            .fillMaxWidth()
+                            .padding(top = FoodDeliveryTheme.dimensions.mediumSpace),
+                    focusRequester = focusRequester,
+                    value =
+                        TextFieldValue(
+                            text = viewState.phoneNumber,
+                            selection = TextRange(viewState.phoneNumberCursorPosition),
+                        ),
+                    labelStringId = Res.string.hint_login_phone,
+                    keyboardOptions =
+                        FoodDeliveryTextFieldDefaults.keyboardOptionsDefault(
+                            keyboardType = KeyboardType.Phone,
+                            imeAction = ImeAction.Done,
+                        ),
+                    onValueChange = { value ->
+                        onAction(Login.Action.ChangePhoneNumber(value.text, value.selection.start))
+                    },
+                    errorMessageId =
+                        if (viewState.hasPhoneError) {
+                            Res.string.error_login_phone
+                        } else {
+                            null
+                        },
+                )
+
+                LaunchedEffect(Unit) {
+                    focusRequester.requestFocus()
+                }
             }
+
+            WebSiteFooter(
+                modifier =
+                    Modifier.padding(
+                        bottom = FoodDeliveryTheme.dimensions.scrollScreenBottomSpace,
+                    ),
+            )
         }
     }
 }

@@ -1,0 +1,120 @@
+.bb-geo .bb-section-heading {
+  max-width: 920px;
+}
+
+.bb-geo-lede {
+  color: hsl(var(--bb-fg-muted));
+  font-size: var(--bb-fs-body);
+  line-height: 1.55;
+  margin: 28px 0 0;
+  max-width: 720px;
+}
+
+.bb-geo-grid {
+  display: grid;
+  gap: 1px;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  margin-top: 56px;
+  overflow: hidden;
+}
+
+.bb-geo-card {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  min-height: 100%;
+  padding: 28px 26px 30px;
+}
+
+.bb-geo-card-top {
+  align-items: center;
+  display: flex;
+  gap: 12px;
+  justify-content: space-between;
+}
+
+.bb-geo-card .bb-label {
+  color: hsl(var(--bb-fg-muted));
+}
+
+.bb-geo-count {
+  color: hsl(var(--bb-fg-faint));
+  font-size: var(--bb-fs-xs);
+  font-variant-numeric: tabular-nums;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  white-space: nowrap;
+}
+
+.bb-geo-card h3 {
+  font-family: var(--app-font-display);
+  font-size: clamp(22px, 2.2vw, 28px);
+  font-weight: 700;
+  letter-spacing: -0.045em;
+  line-height: 1.15;
+  margin: 0;
+}
+
+.bb-geo-cities {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: auto;
+}
+
+.bb-geo-city {
+  background: hsl(var(--bb-well));
+  border: 1px solid hsl(var(--bb-rule));
+  border-radius: 999px;
+  color: hsl(var(--bb-fg));
+  font-size: var(--bb-fs-xs);
+  font-weight: 600;
+  line-height: 1.2;
+  padding: 8px 12px;
+}
+
+.bb-geo-cta {
+  align-items: center;
+  display: flex;
+  gap: 24px;
+  justify-content: space-between;
+  margin-top: 1px;
+  padding: 26px 30px;
+}
+
+.bb-geo-cta strong {
+  display: block;
+  font-family: var(--app-font-display);
+  font-size: 20px;
+  letter-spacing: -0.04em;
+  margin-bottom: 6px;
+}
+
+.bb-geo-cta span {
+  color: hsl(var(--bb-fg-muted));
+  font-size: var(--bb-fs-small);
+  line-height: 1.45;
+}
+
+@media (max-width: 980px) {
+  .bb-geo-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 620px) {
+  .bb-geo-card {
+    padding: 24px 22px 26px;
+  }
+
+  .bb-geo-cta {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 18px;
+    padding: 22px;
+  }
+
+  .bb-geo-cta .bb-button {
+    width: 100%;
+  }
+}

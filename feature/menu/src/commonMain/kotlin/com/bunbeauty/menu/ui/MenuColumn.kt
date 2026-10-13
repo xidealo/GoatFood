@@ -43,6 +43,7 @@ import com.bunbeauty.designsystem.ui.LocalBottomBarPadding
 import com.bunbeauty.designsystem.ui.LocalStatusBarColor
 import com.bunbeauty.designsystem.ui.element.FoodDeliveryProductItem
 import com.bunbeauty.designsystem.ui.element.card.BannerCard
+import com.bunbeauty.designsystem.ui.element.footer.webSiteFooterItem
 import com.bunbeauty.designsystem.ui.icon24
 import com.bunbeauty.designsystem.ui.ignoreHorizontalParentPadding
 import com.bunbeauty.menu.presentation.MenuState
@@ -300,6 +301,13 @@ internal fun MenuColumn(
                     }
                 }
             }
+
+            webSiteFooterItem(
+                modifier =
+                    Modifier
+                        .padding(top = 16.dp)
+                        .ignoreHorizontalParentPadding(horizontal = 16.dp),
+            )
         }
     }
 }

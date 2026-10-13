@@ -60,6 +60,7 @@ import com.bunbeauty.designsystem.ui.element.card.FoodDeliveryCardDefaults.warni
 import com.bunbeauty.designsystem.ui.element.card.FoodDeliveryCheckbox
 import com.bunbeauty.designsystem.ui.element.card.NavigationCardWithDivider
 import com.bunbeauty.designsystem.ui.element.card.WarningCard
+import com.bunbeauty.designsystem.ui.element.footer.WebSiteFooter
 import com.bunbeauty.designsystem.ui.element.shimmer.Shimmer
 import com.bunbeauty.designsystem.ui.element.surface.FoodDeliverySurface
 import com.bunbeauty.designsystem.ui.element.switcher.FoodDeliverySwitcher
@@ -212,6 +213,8 @@ private fun CreateOrderScreen(
                         )
                     }
                 }
+
+                WebSiteFooter(modifier = Modifier.padding(top = 24.dp))
             }
 
             BottomAmountBar(

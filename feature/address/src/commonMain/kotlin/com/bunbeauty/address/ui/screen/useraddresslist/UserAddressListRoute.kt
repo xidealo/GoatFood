@@ -2,10 +2,8 @@ package com.bunbeauty.address.ui.screen.useraddresslist
 
 import androidx.compose.foundation.layout.Arrangement.Absolute.spacedBy
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -23,6 +21,7 @@ import com.bunbeauty.designsystem.ui.LocalBottomBarPadding
 import com.bunbeauty.designsystem.ui.element.FoodDeliveryHorizontalDivider
 import com.bunbeauty.designsystem.ui.element.FoodDeliveryScaffold
 import com.bunbeauty.designsystem.ui.element.button.MainButton
+import com.bunbeauty.designsystem.ui.element.footer.WebStickyFooterLazyColumn
 import com.bunbeauty.designsystem.ui.element.selectable.SelectableItem
 import com.bunbeauty.designsystem.ui.screen.EmptyScreen
 import com.bunbeauty.designsystem.ui.screen.ErrorScreen
@@ -145,15 +144,15 @@ private fun UserAddressListScreen(
 
 @Composable
 private fun UserAddressListSuccessScreen(userAddressItems: List<UserAddressItem>) {
-    LazyColumn(
+    WebStickyFooterLazyColumn(
         modifier = Modifier.fillMaxSize(),
-        contentPadding =
-            PaddingValues(
+        verticalArrangement = spacedBy(8.dp),
+        footerModifier =
+            Modifier.padding(
                 bottom =
                     FoodDeliveryTheme.dimensions.scrollScreenBottomSpace +
                         LocalBottomBarPadding.current,
             ),
-        verticalArrangement = spacedBy(8.dp),
     ) {
         items(userAddressItems) { userAddressItem ->
             Column {

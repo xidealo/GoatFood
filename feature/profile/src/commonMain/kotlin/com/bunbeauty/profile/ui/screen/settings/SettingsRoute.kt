@@ -1,10 +1,6 @@
 package com.bunbeauty.profile.ui.screen.settings
 
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -20,6 +16,7 @@ import com.bunbeauty.designsystem.ui.element.button.MainButton
 import com.bunbeauty.designsystem.ui.element.button.TextButton
 import com.bunbeauty.designsystem.ui.element.card.NavigationCardWithDivider
 import com.bunbeauty.designsystem.ui.element.card.TextCardWithDivider
+import com.bunbeauty.designsystem.ui.element.footer.WebStickyFooterColumn
 import com.bunbeauty.designsystem.ui.screen.ErrorScreen
 import com.bunbeauty.designsystem.ui.screen.LoadingScreen
 import com.bunbeauty.profile.presentation.settings.SettingsState
@@ -213,11 +210,9 @@ fun SettingsScreenSuccess(
     settingsState: SettingsViewState,
     onAction: (SettingsState.Action) -> Unit,
 ) {
-    Column(
-        modifier =
-            Modifier
-                .fillMaxSize()
-                .verticalScroll(rememberScrollState()),
+    WebStickyFooterColumn(
+        footerModifier =
+            Modifier.padding(bottom = FoodDeliveryTheme.dimensions.scrollScreenBottomSpace),
     ) {
         TextCardWithDivider(
             label = stringResource(Res.string.hint_settings_phone),

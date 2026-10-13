@@ -16,7 +16,9 @@
 @import './styles/components/product.css';
 @import './styles/components/dashboard.css';
 @import './styles/components/conditions.css';
+@import './styles/components/geo.css';
 @import './styles/components/faq.css';
 @import './styles/components/cta.css';
 @import './styles/components/footer.css';
+@import './styles/components/legal.css';
 @import './styles/components/modal.css';
