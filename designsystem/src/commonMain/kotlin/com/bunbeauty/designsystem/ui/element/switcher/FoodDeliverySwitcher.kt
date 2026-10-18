@@ -20,7 +20,6 @@ import com.bunbeauty.designsystem.theme.FoodDeliveryTheme
 import com.bunbeauty.designsystem.theme.medium
 import com.bunbeauty.designsystem.ui.element.shimmer.Shimmer
 import com.bunbeauty.designsystem.ui.element.switcher.FoodDeliverySwitcherDefaults.switcherShape
-
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
 

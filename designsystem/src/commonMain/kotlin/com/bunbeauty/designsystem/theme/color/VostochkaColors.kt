@@ -1,18 +1,19 @@
 package com.bunbeauty.designsystem.theme.color
 
-import com.bunbeauty.designsystem.theme.color.FoodDeliveryColors.Black700
-import com.bunbeauty.designsystem.theme.color.FoodDeliveryColors.Gold100
+import androidx.compose.ui.graphics.Color
 import com.bunbeauty.designsystem.theme.color.FoodDeliveryColors.LightBlue
-import com.bunbeauty.designsystem.theme.color.FoodDeliveryColors.Orange50
-import com.bunbeauty.designsystem.theme.color.FoodDeliveryColors.Yellow400
 
-val LimonadColors =
+private val VostochkaCenterPrimary = Color(0xFFD0021B)
+private val VostochkaCenterSurfaceVariant = Color(0xFFE8E8F5)
+private val VostochkaCenterStrokeVariant = Color(0xFFD0D0E8)
+
+val VostochkaColors =
     AppColors(
         mainColors =
             ColorDefaults.lightMainColors(
-                primary = Yellow400,
-                surfaceVariant = Orange50,
-                strokeVariant = Gold100,
+                primary = VostochkaCenterPrimary,
+                surfaceVariant = VostochkaCenterSurfaceVariant,
+                strokeVariant = VostochkaCenterStrokeVariant,
             ),
         orderColors = ColorDefaults.orderColors(),
         statusColors = ColorDefaults.statusColors(),
@@ -20,12 +21,11 @@ val LimonadColors =
         isLight = true,
     )
 
-val LimonadDarkColors =
+val VostochkaDarkColors =
     AppColors(
         mainColors =
             ColorDefaults.darkMainColors(
-                primary = Yellow400,
-                surface = Black700,
+                primary = VostochkaCenterPrimary,
             ),
         orderColors = ColorDefaults.orderColors(),
         statusColors = ColorDefaults.statusColors(),

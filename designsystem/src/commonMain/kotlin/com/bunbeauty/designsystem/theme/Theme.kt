@@ -22,8 +22,8 @@ import com.bunbeauty.designsystem.theme.color.GustoPubDarkColors
 import com.bunbeauty.designsystem.theme.color.GustoPubLightColors
 import com.bunbeauty.designsystem.theme.color.LegendaDarkColors
 import com.bunbeauty.designsystem.theme.color.LegendaLightColors
-import com.bunbeauty.designsystem.theme.color.LimonadColors
-import com.bunbeauty.designsystem.theme.color.LimonadDarkColors
+import com.bunbeauty.designsystem.theme.color.VostochkaColors
+import com.bunbeauty.designsystem.theme.color.VostochkaDarkColors
 import com.bunbeauty.designsystem.theme.color.MiminoDarkColors
 import com.bunbeauty.designsystem.theme.color.MiminoLightColors
 import com.bunbeauty.designsystem.theme.color.LocalAppColors
@@ -192,12 +192,15 @@ private fun getAppColors(
             }
         }
 
-        FoodDeliveryCompany.LIMONAD ->
+        FoodDeliveryCompany.VOSTOCHKA ->{
+            logoMedium = Res.drawable.logo_medium_taverna
+
             if (isDarkTheme) {
-                LimonadDarkColors
+                VostochkaDarkColors
             } else {
-                LimonadColors
+                VostochkaColors
             }
+        }
 
         FoodDeliveryCompany.TAVERNA -> {
             logoMedium = Res.drawable.logo_medium_taverna

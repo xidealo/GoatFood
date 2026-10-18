@@ -44,8 +44,8 @@ enum class FoodDeliveryCompany(
         flavor = "emoji",
         companyUuid = "0b7b2388-0992-48cc-812e-79bb44ff58ba"
     ),
-    LIMONAD(
-        flavor = "limonad",
+    VOSTOCHKA(
+        flavor = "vostochka",
         companyUuid = "405bca15-13f5-4f1b-9215-663d230e9bdf"
     ),
     TAVERNA(

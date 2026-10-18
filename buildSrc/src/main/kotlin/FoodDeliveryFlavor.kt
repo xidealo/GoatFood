@@ -42,9 +42,9 @@ enum class FoodDeliveryFlavor(
         key = "emoji",
         applicationId = "com.bunbeauty.emoji"
     ),
-    LIMONAD(
-        key = "limonad",
-        applicationId = "com.bunbeauty.limonad"
+    VOSTOCHKA(
+        key = "vostochka",
+        applicationId = "com.bunbeauty.vostochka"
     ),
     TAVERNA(
         key = "taverna",
