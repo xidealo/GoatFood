@@ -59,6 +59,7 @@ import papakarlo.designsystem.generated.resources.logo_medium_taverna
 import papakarlo.designsystem.generated.resources.logo_medium_usadba
 import papakarlo.designsystem.generated.resources.logo_medium_vkus_kavkaza
 import papakarlo.designsystem.generated.resources.logo_medium_voljane
+import papakarlo.designsystem.generated.resources.logo_medium_vostochka
 import papakarlo.designsystem.generated.resources.logo_medium_yuliar
 import papakarlo.designsystem.generated.resources.logo_small_emojicenter_dark
 import papakarlo.designsystem.generated.resources.logo_small_emojicenter_light
@@ -192,9 +193,8 @@ private fun getAppColors(
             }
         }
 
-        FoodDeliveryCompany.VOSTOCHKA ->{
-            logoMedium = Res.drawable.logo_medium_taverna
-
+        FoodDeliveryCompany.VOSTOCHKA -> {
+            logoMedium = Res.drawable.logo_medium_vostochka
             if (isDarkTheme) {
                 VostochkaDarkColors
             } else {
