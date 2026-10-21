@@ -72,6 +72,10 @@ target 'emojicenter' do
   default_pods
 end
 
+target 'vostochka' do
+  default_pods
+end
+
 # KMP only has iosSimulatorArm64 — Release fat archives pass ARCHS="arm64 x86_64"
 # into [CP-User] Build shared and fail with: Unknown iOS simulator arch: 'x86_64'
 #
