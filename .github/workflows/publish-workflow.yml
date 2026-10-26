@@ -75,7 +75,8 @@ jobs:
           "taverna",
           "voljane",
           "mimino",
-          "emojicenter"
+          "emojicenter",
+          "moroshka"
         ]
     steps:
       - uses: actions/checkout@v5
