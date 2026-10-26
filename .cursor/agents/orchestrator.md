@@ -130,6 +130,18 @@ Responsible for:
 
 ---
 
+### iOS Release
+
+* `ios-release-agent`
+
+Responsible for:
+
+* adding a new cafe as an iOS app (Xcode target, resources, Firebase plist)
+* Podfile, shared scheme, fastlane/match and iOS CI wiring
+* simulator build verification of the new target
+
+---
+
 ### QA
 
 * `tester`
@@ -323,6 +335,18 @@ No behavior changes.
 ## Use reviewer always
 
 Reviewer is mandatory.
+
+---
+
+## Use ios-release-agent when:
+
+* a new cafe/brand must be added as an iOS app
+* a new Xcode target, scheme, or bundle id is introduced
+* fastlane/match or iOS publish workflows need a new app entry
+
+Prerequisite: flavor, `FoodDeliveryCompany` entry, theme, and logo already exist in shared code. If not, route shared-code work first (`kmp-architect` / `developer_*`), then `ios-release-agent`.
+
+Typical order: `ios-release-agent` → `reviewer` → `tester`
 
 ---
 

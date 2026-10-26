@@ -37,6 +37,7 @@ jobs:
           - taverna
           - voljane
           - mimino
+          - vostochka
 
     steps:
       - name: Checkout repository

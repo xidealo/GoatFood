@@ -72,6 +72,10 @@ target 'emojicenter' do
   default_pods
 end
 
+target 'vostochka' do
+  default_pods
+end
+
 # KMP only has iosSimulatorArm64 — Release fat archives pass ARCHS="arm64 x86_64"
 # into [CP-User] Build shared and fail with: Unknown iOS simulator arch: 'x86_64'
 #
@@ -84,6 +88,12 @@ post_install do |installer|
   installer.pods_project.targets.each do |target|
     target.build_configurations.each do |config|
       config.build_settings['EXCLUDED_ARCHS[sdk=iphonesimulator*]'] = 'x86_64'
+      # Xcode 27+ rejects pod targets below iOS 15, while Firebase/Kingfisher
+      # podspecs (and their transitive deps) still declare 9.0-13.0.
+      deployment_target = config.build_settings['IPHONEOS_DEPLOYMENT_TARGET']
+      if deployment_target.nil? || Gem::Version.new(deployment_target) < Gem::Version.new('15.5')
+        config.build_settings['IPHONEOS_DEPLOYMENT_TARGET'] = '15.5'
+      end
     end
   end
 
