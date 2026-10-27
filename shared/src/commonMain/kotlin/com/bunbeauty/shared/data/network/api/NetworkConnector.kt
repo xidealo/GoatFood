@@ -28,7 +28,7 @@ import com.bunbeauty.shared.data.network.model.order.get.LightOrderServer
 import com.bunbeauty.shared.data.network.model.order.get.OrderCodeServer
 import com.bunbeauty.shared.data.network.model.order.get.OrderServer
 import com.bunbeauty.shared.data.network.model.order.get.OrderUpdateServer
-import com.bunbeauty.shared.data.network.model.order.post.OrderPostServer
+import com.bunbeauty.shared.data.network.model.order.post.OrderV6PostServer
 import com.bunbeauty.shared.data.network.model.profile.get.ProfileServer
 import com.bunbeauty.shared.data.network.model.profile.patch.PatchUserServer
 import kotlinx.coroutines.flow.Flow
@@ -107,7 +107,7 @@ interface NetworkConnector {
 
     suspend fun postOrder(
         token: String,
-        order: OrderPostServer,
+        order: OrderV6PostServer,
     ): ApiResult<OrderCodeServer>
 
     suspend fun postCodeRequest(codeRequest: CodeRequestServer): ApiResult<AuthSessionServer>

@@ -39,6 +39,7 @@ import com.bunbeauty.core.domain.user.IUserInteractor
 import com.bunbeauty.core.extension.launchSafe
 import com.bunbeauty.core.model.cafe.Cafe
 import com.bunbeauty.core.model.date_time.Time
+import com.bunbeauty.core.model.order.PickupServing
 import com.bunbeauty.core.motivation.toMotivationData
 import kotlinx.coroutines.Job
 
@@ -177,6 +178,18 @@ class CreateOrderViewModel(
 
             is CreateOrder.Action.ChangePaymentMethod -> {
                 changePaymentMethod(paymentMethodUuid = action.paymentMethodUuid)
+            }
+
+            CreateOrder.Action.PickupServingClick -> {
+                pickupServingClick()
+            }
+
+            CreateOrder.Action.HidePickupServingList -> {
+                hidePickupServingList()
+            }
+
+            is CreateOrder.Action.ChangePickupServing -> {
+                changePickupServing(pickupServing = action.pickupServing)
             }
 
             is CreateOrder.Action.ChangeWithoutChangeChecked -> {
@@ -426,6 +439,31 @@ class CreateOrderViewModel(
         }
     }
 
+    private fun pickupServingClick() {
+        setState {
+            copy(
+                isPickupServingListShown = true,
+            )
+        }
+    }
+
+    private fun hidePickupServingList() {
+        setState {
+            copy(
+                isPickupServingListShown = false,
+            )
+        }
+    }
+
+    private fun changePickupServing(pickupServing: PickupServing) {
+        setState {
+            copy(
+                selectedPickupServing = pickupServing,
+                isPickupServingListShown = false,
+            )
+        }
+    }
+
     private fun changeWithoutChangeChecked() {
         setState {
             copy(withoutChangeChecked = !withoutChangeChecked)
@@ -567,6 +605,7 @@ class CreateOrderViewModel(
                             },
                         timeZone = getSelectedCityTimeZone(),
                         paymentMethod = state.selectedPaymentMethod.name.name,
+                        pickupServing = if (state.isDelivery) null else state.selectedPickupServing,
                     )
                 if (orderCode == null) {
                     sendOrderCreateFailEvent(error = "null_order")

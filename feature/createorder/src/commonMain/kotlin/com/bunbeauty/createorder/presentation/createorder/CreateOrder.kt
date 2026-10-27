@@ -8,6 +8,7 @@ import com.bunbeauty.core.model.address.UserAddress
 import com.bunbeauty.core.model.cafe.Cafe
 import com.bunbeauty.core.model.cafe.SelectableCafe
 import com.bunbeauty.core.model.date_time.Time
+import com.bunbeauty.core.model.order.PickupServing
 import com.bunbeauty.core.model.payment_method.PaymentMethod
 import com.bunbeauty.core.model.payment_method.PaymentMethodName
 import com.bunbeauty.core.model.payment_method.SelectablePaymentMethod
@@ -42,6 +43,8 @@ interface CreateOrder {
         val isPaymentMethodListShown: Boolean = false,
         val selectedPaymentMethod: PaymentMethod? = null,
         val isPaymentMethodErrorShown: Boolean = false,
+        val selectedPickupServing: PickupServing = PickupServing.BAG,
+        val isPickupServingListShown: Boolean = false,
         val withoutChangeChecked: Boolean = false,
         val change: Int? = null,
         val isChangeErrorShown: Boolean = false,
@@ -141,6 +144,14 @@ interface CreateOrder {
 
         data class ChangePaymentMethod(
             val paymentMethodUuid: String,
+        ) : Action
+
+        data object PickupServingClick : Action
+
+        data object HidePickupServingList : Action
+
+        data class ChangePickupServing(
+            val pickupServing: PickupServing,
         ) : Action
 
         data object ChangeWithoutChangeChecked : Action

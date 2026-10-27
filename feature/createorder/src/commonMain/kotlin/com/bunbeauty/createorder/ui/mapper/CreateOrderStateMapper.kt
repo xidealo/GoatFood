@@ -3,6 +3,7 @@ package com.bunbeauty.createorder.ui.mapper
 import androidx.compose.runtime.Composable
 import com.bunbeauty.core.extension.toAddressString
 import com.bunbeauty.core.model.cafe.Cafe
+import com.bunbeauty.core.model.order.PickupServing
 import com.bunbeauty.core.motivation.MotivationUi
 import com.bunbeauty.core.motivation.toMotivationUi
 import com.bunbeauty.createorder.presentation.createorder.CreateOrder
@@ -11,7 +12,9 @@ import com.bunbeauty.createorder.ui.CreateOrderViewState
 import com.bunbeauty.createorder.ui.DeliveryAddressListUI
 import com.bunbeauty.createorder.ui.PaymentMethodListUI
 import com.bunbeauty.createorder.ui.PickupAddressListUI
+import com.bunbeauty.createorder.ui.PickupServingListUI
 import com.bunbeauty.createorder.ui.SelectableAddressUI
+import com.bunbeauty.createorder.ui.SelectablePickupServingUI
 import com.bunbeauty.createorder.ui.TimePickerUI
 import com.bunbeauty.createorder.ui.deferredtime.toDeferredTimeString
 import com.bunbeauty.createorder.ui.deferredtime.toTimeUI
@@ -25,6 +28,8 @@ import papakarlo.designsystem.generated.resources.msg_additional_utensils_count
 import papakarlo.designsystem.generated.resources.msg_change_from
 import papakarlo.designsystem.generated.resources.msg_without_change
 import papakarlo.designsystem.generated.resources.msg_without_utensils
+import papakarlo.designsystem.generated.resources.pickup_serving_bag
+import papakarlo.designsystem.generated.resources.pickup_serving_tray
 import papakarlo.designsystem.generated.resources.pickup_time
 
 @Composable
@@ -111,7 +116,28 @@ private fun CreateOrder.DataState.getCreateOrderTypePickup() =
             ),
         hasOpenedCafe = hasOpenedCafe,
         isEnabled = isPickupEnabled,
+        selectedPickupServing = selectedPickupServing.toName(),
+        pickupServingList =
+            PickupServingListUI(
+                isShown = isPickupServingListShown,
+                pickupServingList =
+                    PickupServing.entries
+                        .map { pickupServing ->
+                            SelectablePickupServingUI(
+                                pickupServing = pickupServing,
+                                name = pickupServing.toName(),
+                                isSelected = pickupServing == selectedPickupServing,
+                            )
+                        }.toImmutableList(),
+            ),
     )
+
+@Composable
+private fun PickupServing.toName(): String =
+    when (this) {
+        PickupServing.TRAY -> stringResource(Res.string.pickup_serving_tray)
+        PickupServing.BAG -> stringResource(Res.string.pickup_serving_bag)
+    }
 
 @Composable
 private fun CreateOrder.DataState.getCreateOrderTypeDelivery() =

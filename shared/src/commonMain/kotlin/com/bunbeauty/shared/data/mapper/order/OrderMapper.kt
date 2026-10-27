@@ -12,7 +12,7 @@ import com.bunbeauty.shared.data.mapper.order_product.IOrderProductMapper
 import com.bunbeauty.shared.data.network.model.order.get.LightOrderServer
 import com.bunbeauty.shared.data.network.model.order.get.OrderServer
 import com.bunbeauty.shared.data.network.model.order.post.OrderAddressPostServer
-import com.bunbeauty.shared.data.network.model.order.post.OrderPostServer
+import com.bunbeauty.shared.data.network.model.order.post.OrderV6PostServer
 import com.bunbeauty.shared.db.LightOrderEntity
 import com.bunbeauty.shared.db.OrderEntity
 import com.bunbeauty.shared.db.OrderWithProductEntity
@@ -180,8 +180,8 @@ class OrderMapper(
             percentDiscount = orderServer.percentDiscount,
         )
 
-    override fun toOrderPostServer(createdOrder: CreatedOrder): OrderPostServer =
-        OrderPostServer(
+    override fun toOrderPostServer(createdOrder: CreatedOrder): OrderV6PostServer =
+        OrderV6PostServer(
             isDelivery = createdOrder.isDelivery,
             address =
                 OrderAddressPostServer(
@@ -198,5 +198,6 @@ class OrderMapper(
             deferredTime = createdOrder.deferredTime,
             orderProducts = createdOrder.orderProducts.map(orderProductMapper::toPostServerModel),
             paymentMethod = createdOrder.paymentMethod,
+            pickupServing = createdOrder.pickupServing?.name,
         )
 }

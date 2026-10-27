@@ -6,7 +6,7 @@ import com.bunbeauty.core.model.order.Order
 import com.bunbeauty.core.model.order.OrderCode
 import com.bunbeauty.shared.data.network.model.order.get.LightOrderServer
 import com.bunbeauty.shared.data.network.model.order.get.OrderServer
-import com.bunbeauty.shared.data.network.model.order.post.OrderPostServer
+import com.bunbeauty.shared.data.network.model.order.post.OrderV6PostServer
 import com.bunbeauty.shared.db.LightOrderEntity
 import com.bunbeauty.shared.db.OrderEntity
 import com.bunbeauty.shared.db.OrderWithProductEntity
@@ -30,5 +30,5 @@ interface IOrderMapper {
 
     fun toOrderEntity(orderServer: OrderServer): OrderEntity
 
-    fun toOrderPostServer(createdOrder: CreatedOrder): OrderPostServer
+    fun toOrderPostServer(createdOrder: CreatedOrder): OrderV6PostServer
 }

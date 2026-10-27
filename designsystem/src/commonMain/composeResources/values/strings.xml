@@ -101,6 +101,9 @@
     <string name="delivery_time">Время доставки</string>
     <string name="pickup_time">Время самовывоза</string>
     <string name="payment_method">Способ оплаты</string>
+    <string name="pickup_serving">Способ получения</string>
+    <string name="pickup_serving_tray">На подносе</string>
+    <string name="pickup_serving_bag">В пакете</string>
     <string name="delivery_address">Адрес доставки</string>
     <string name="pickup_address">Адрес самовывоза</string>
     <string name="hint_create_order_comment">Комментарий</string>
