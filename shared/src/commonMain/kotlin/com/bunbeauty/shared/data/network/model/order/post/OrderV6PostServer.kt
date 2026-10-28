@@ -4,7 +4,7 @@ import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
-class OrderPostServer(
+class OrderV6PostServer(
     @SerialName("isDelivery")
     val isDelivery: Boolean,
     @SerialName("address")
@@ -17,6 +17,8 @@ class OrderPostServer(
     val orderProducts: List<OrderProductPostServer>,
     @SerialName("paymentMethod")
     val paymentMethod: String?,
+    @SerialName("pickupServing")
+    val pickupServing: String?,
 )
 
 @Serializable

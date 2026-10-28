@@ -2,6 +2,7 @@ package com.bunbeauty.createorder.ui
 
 import androidx.compose.runtime.Immutable
 import com.bunbeauty.core.base.BaseViewState
+import com.bunbeauty.core.model.order.PickupServing
 import com.bunbeauty.core.motivation.MotivationUi
 import com.bunbeauty.designsystem.model.PaymentMethodUI
 import kotlinx.collections.immutable.ImmutableList
@@ -49,6 +50,8 @@ data class CreateOrderViewState(
             val pickupAddressList: PickupAddressListUI,
             val hasOpenedCafe: Boolean,
             val isEnabled: Boolean,
+            val selectedPickupServing: String,
+            val pickupServingList: PickupServingListUI,
         ) : CreateOrderType
 
         @Immutable
@@ -107,6 +110,12 @@ data class PaymentMethodListUI(
 )
 
 @Immutable
+data class PickupServingListUI(
+    val isShown: Boolean,
+    val pickupServingList: ImmutableList<SelectablePickupServingUI>,
+)
+
+@Immutable
 data class TimePickerUI(
     val isShown: Boolean,
     val minTime: TimeUI,
@@ -130,6 +139,13 @@ data class SelectableAddressUI(
 @Immutable
 data class SelectablePaymentMethodUI(
     val uuid: String,
+    val name: String,
+    val isSelected: Boolean,
+)
+
+@Immutable
+data class SelectablePickupServingUI(
+    val pickupServing: PickupServing,
     val name: String,
     val isSelected: Boolean,
 )

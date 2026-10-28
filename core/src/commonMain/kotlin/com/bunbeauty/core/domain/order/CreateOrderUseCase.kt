@@ -11,6 +11,7 @@ import com.bunbeauty.core.model.date_time.Time
 import com.bunbeauty.core.model.order.CreatedOrder
 import com.bunbeauty.core.model.order.CreatedOrderAddress
 import com.bunbeauty.core.model.order.OrderCode
+import com.bunbeauty.core.model.order.PickupServing
 import com.bunbeauty.core.model.product.CreatedOrderProduct
 import kotlin.time.ExperimentalTime
 
@@ -29,7 +30,12 @@ class CreateOrderUseCase(
         deferredTime: Time?,
         timeZone: String,
         paymentMethod: String?,
+        pickupServing: PickupServing?,
     ): OrderCode? {
+        if (!isPickupServingValid(isDelivery = isDelivery, pickupServing = pickupServing)) {
+            return null
+        }
+
         val cartProductList = cartProductRepo.getCartProductList()
 
         val createdOrderAddress =
@@ -72,6 +78,7 @@ class CreateOrderUseCase(
                         )
                     },
                 paymentMethod = paymentMethod,
+                pickupServing = pickupServing,
             )
 
         val orderCode = orderRepo.createOrder(createdOrder = createdOrder)
@@ -80,6 +87,16 @@ class CreateOrderUseCase(
         }
         return orderCode
     }
+
+    private fun isPickupServingValid(
+        isDelivery: Boolean,
+        pickupServing: PickupServing?,
+    ): Boolean =
+        if (isDelivery) {
+            pickupServing == null
+        } else {
+            pickupServing != null
+        }
 
     private fun getSortedAdditionUuidList(cartProduct: CartProduct) =
         cartProduct.additionList

@@ -35,6 +35,7 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.bunbeauty.core.Constants.FAB_SNACKBAR_BOTTOM_PADDING
 import com.bunbeauty.core.Constants.RUBLE_CURRENCY
+import com.bunbeauty.core.model.order.PickupServing
 import com.bunbeauty.core.motivation.Motivation
 import com.bunbeauty.createorder.presentation.createorder.CreateOrder
 import com.bunbeauty.createorder.presentation.createorder.CreateOrderViewModel
@@ -43,6 +44,7 @@ import com.bunbeauty.createorder.ui.ui.DeferredTimeBottomSheet
 import com.bunbeauty.createorder.ui.ui.DeliveryAddressListBottomSheet
 import com.bunbeauty.createorder.ui.ui.PaymentMethodListBottomSheet
 import com.bunbeauty.createorder.ui.ui.PickupAddressListBottomSheet
+import com.bunbeauty.createorder.ui.ui.PickupServingListBottomSheet
 import com.bunbeauty.createorder.ui.ui.TimePickerDialog
 import com.bunbeauty.designsystem.model.PaymentMethodUI
 import com.bunbeauty.designsystem.model.PaymentMethodValueUI
@@ -105,6 +107,7 @@ import papakarlo.designsystem.generated.resources.msg_without_change
 import papakarlo.designsystem.generated.resources.msg_without_utensils
 import papakarlo.designsystem.generated.resources.payment_method
 import papakarlo.designsystem.generated.resources.pickup_address
+import papakarlo.designsystem.generated.resources.pickup_serving
 import papakarlo.designsystem.generated.resources.title_create_order
 import papakarlo.designsystem.generated.resources.warning_no_order_available
 import papakarlo.designsystem.generated.resources.warning_no_time_available
@@ -438,11 +441,23 @@ private fun PickupContent(
             pickupAddressList = createOrderType.pickupAddressList,
             onAction = onAction,
         )
+        PickupServingListBottomSheet(
+            pickupServingList = createOrderType.pickupServingList,
+            onAction = onAction,
+        )
         if (createOrderType.isEnabled) {
             CommonContent(
                 viewState = viewState,
                 focusManager = focusManager,
                 onAction = onAction,
+                pickupServingContent = {
+                    PickupServingCard(
+                        selectedPickupServing = createOrderType.selectedPickupServing,
+                        isClickable = viewState.isFieldsEnabled,
+                        focusManager = focusManager,
+                        onAction = onAction,
+                    )
+                },
             )
         } else {
             if (createOrderType.hasOpenedCafe) {
@@ -494,10 +509,31 @@ private fun PickupAddressCard(
 }
 
 @Composable
+private fun PickupServingCard(
+    selectedPickupServing: String,
+    isClickable: Boolean,
+    focusManager: FocusManager,
+    onAction: (CreateOrder.Action) -> Unit,
+    modifier: Modifier = Modifier,
+) {
+    NavigationCardWithDivider(
+        modifier = modifier,
+        label = stringResource(Res.string.pickup_serving),
+        value = selectedPickupServing,
+        clickable = isClickable,
+        onClick = {
+            focusManager.clearFocus()
+            onAction(CreateOrder.Action.PickupServingClick)
+        },
+    )
+}
+
+@Composable
 private fun CommonContent(
     viewState: CreateOrderViewState,
     focusManager: FocusManager,
     onAction: (CreateOrder.Action) -> Unit,
+    pickupServingContent: @Composable () -> Unit = {},
 ) {
     if (viewState.isLoadingSwitcher) return
 
@@ -506,6 +542,7 @@ private fun CommonContent(
         focusManager = focusManager,
         onAction = onAction,
     )
+    pickupServingContent()
     PaymentMethodCard(
         viewState = viewState,
         focusManager = focusManager,
@@ -1014,6 +1051,24 @@ private fun LoadingRow(
     }
 }
 
+private val pickupServingListPreviewMock =
+    PickupServingListUI(
+        isShown = false,
+        pickupServingList =
+            persistentListOf(
+                SelectablePickupServingUI(
+                    pickupServing = PickupServing.TRAY,
+                    name = "На подносе",
+                    isSelected = false,
+                ),
+                SelectablePickupServingUI(
+                    pickupServing = PickupServing.BAG,
+                    name = "В пакете",
+                    isSelected = true,
+                ),
+            ),
+    )
+
 private val createOrderViewStatePreviewMock =
     CreateOrderViewState(
         createOrderType =
@@ -1117,6 +1172,8 @@ private fun SelectedPickUpPreview() {
                             ),
                         hasOpenedCafe = true,
                         isEnabled = true,
+                        selectedPickupServing = "В пакете",
+                        pickupServingList = pickupServingListPreviewMock,
                     ),
                 isOrderCreationEnabled = true,
                 isLoadingCreateOrder = false,
@@ -1151,6 +1208,8 @@ private fun PickupCreateOrderNotEnabledPreview() {
                             ),
                         hasOpenedCafe = true,
                         isEnabled = false,
+                        selectedPickupServing = "В пакете",
+                        pickupServingList = pickupServingListPreviewMock,
                     ),
                 isOrderCreationEnabled = false,
                 isLoadingCreateOrder = false,
