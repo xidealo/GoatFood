@@ -13,18 +13,18 @@ import com.bunbeauty.shared.data.network.logger.NetworkErrorLogPolicy
 import com.bunbeauty.shared.data.network.logger.NetworkErrorLogger
 import com.bunbeauty.shared.data.network.logger.isCoroutineCancellation
 import com.bunbeauty.shared.data.network.model.AddressServer
-import com.bunbeauty.shared.data.network.model.CafeServer
+import com.bunbeauty.shared.data.network.model.CafeListItemServer
 import com.bunbeauty.shared.data.network.model.CategoryServer
 import com.bunbeauty.shared.data.network.model.CityServer
 import com.bunbeauty.shared.data.network.model.DiscountServer
 import com.bunbeauty.shared.data.network.model.FavoriteServer
-import com.bunbeauty.shared.data.network.model.PostFavoriteServer
 import com.bunbeauty.shared.data.network.model.ForceUpdateVersionServer
 import com.bunbeauty.shared.data.network.model.LinkServer
 import com.bunbeauty.shared.data.network.model.ListServer
 import com.bunbeauty.shared.data.network.model.MenuProductServer
 import com.bunbeauty.shared.data.network.model.PaymentMethodServer
 import com.bunbeauty.shared.data.network.model.PaymentServer
+import com.bunbeauty.shared.data.network.model.PostFavoriteServer
 import com.bunbeauty.shared.data.network.model.RecommendationDataServer
 import com.bunbeauty.shared.data.network.model.SettingsServer
 import com.bunbeauty.shared.data.network.model.StreetServer
@@ -99,9 +99,9 @@ internal class NetworkConnectorImpl(
             parameters = mapOf(COMPANY_UUID_PARAMETER to companyUuidProvider.companyUuid),
         )
 
-    override suspend fun getCafeListByCityUuid(cityUuid: String): ApiResult<ListServer<CafeServer>> =
+    override suspend fun getCafeListByCityUuid(cityUuid: String): ApiResult<ListServer<CafeListItemServer>> =
         getData(
-            path = "cafe",
+            path = "v3/cafe/list",
             parameters = hashMapOf(CITY_UUID_PARAMETER to cityUuid),
         )
 
@@ -174,7 +174,7 @@ internal class NetworkConnectorImpl(
         uuid: String,
     ): ApiResult<OrderServer> =
         getData(
-            path = "/client/order",
+            path = "v2/client/order/details",
             parameters =
                 buildMap {
                     put("uuid", uuid)

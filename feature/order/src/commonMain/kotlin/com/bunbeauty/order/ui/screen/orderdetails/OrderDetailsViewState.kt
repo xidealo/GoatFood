@@ -24,5 +24,6 @@ data class OrderDetailsViewState(
         val pickupMethod: String,
         val deferredTimeHint: String,
         val paymentMethod: String?,
+        val pickupServing: String?,
     )
 }

@@ -125,6 +125,7 @@ class OrderDetailsViewModel(
             comment = order.comment,
             isDelivery = order.isDelivery,
             paymentMethod = order.paymentMethod,
+            pickupServing = order.pickupServing,
         )
 
     private fun getProductList(order: Order) =

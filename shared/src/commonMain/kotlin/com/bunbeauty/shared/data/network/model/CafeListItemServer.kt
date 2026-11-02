@@ -4,7 +4,7 @@ import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class CafeServer(
+data class CafeListItemServer(
     @SerialName("uuid")
     val uuid: String,
     @SerialName("fromTime")
@@ -29,4 +29,6 @@ data class CafeServer(
     val workload: String,
     @SerialName("additionalUtensils")
     val additionalUtensils: Boolean,
+    @SerialName("pickupServingChoiceEnabled")
+    val pickupServingChoiceEnabled: Boolean = false,
 )

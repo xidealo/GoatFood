@@ -116,10 +116,16 @@ private fun CreateOrder.DataState.getCreateOrderTypePickup() =
             ),
         hasOpenedCafe = hasOpenedCafe,
         isEnabled = isPickupEnabled,
+        isPickupServingChoiceEnabled = selectedCafe?.pickupServingChoiceEnabled == true,
         selectedPickupServing = selectedPickupServing.toName(),
         pickupServingList =
             PickupServingListUI(
-                isShown = isPickupServingListShown,
+                isShown =
+                    if (selectedCafe?.pickupServingChoiceEnabled == true) {
+                        isPickupServingListShown
+                    } else {
+                        false
+                    },
                 pickupServingList =
                     PickupServing.entries
                         .map { pickupServing ->

@@ -192,6 +192,7 @@
     <!-- ORDER DETAILS -->
     <string name="msg_order_details_date_time">Дата и время заказа</string>
     <string name="msg_order_details_pickup_method">Способ получения</string>
+    <string name="msg_order_details_serving">Выдача</string>
     <string name="msg_order_details_payment_method">Способ оплаты</string>
     <string name="msg_order_details_address">Адрес</string>
     <string name="msg_order_details_comment">Комментарий</string>

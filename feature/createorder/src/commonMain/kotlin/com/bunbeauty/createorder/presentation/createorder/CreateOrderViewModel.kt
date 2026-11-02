@@ -455,6 +455,21 @@ class CreateOrderViewModel(
         }
     }
 
+    private fun pickupServingToSend(
+        isDelivery: Boolean,
+        pickupServingChoiceEnabled: Boolean,
+        selectedPickupServing: PickupServing,
+    ): PickupServing? =
+        if (isDelivery) {
+            null
+        } else {
+            if (pickupServingChoiceEnabled) {
+                selectedPickupServing
+            } else {
+                null
+            }
+        }
+
     private fun changePickupServing(pickupServing: PickupServing) {
         setState {
             copy(
@@ -569,6 +584,7 @@ class CreateOrderViewModel(
                                     .orEmpty(),
                         ),
                 )
+                val pickupServingChoiceEnabled = state.selectedCafe?.pickupServingChoiceEnabled == true
                 val orderCode =
                     createOrder(
                         isDelivery = state.isDelivery,
@@ -605,7 +621,13 @@ class CreateOrderViewModel(
                             },
                         timeZone = getSelectedCityTimeZone(),
                         paymentMethod = state.selectedPaymentMethod.name.name,
-                        pickupServing = if (state.isDelivery) null else state.selectedPickupServing,
+                        pickupServing =
+                            pickupServingToSend(
+                                isDelivery = state.isDelivery,
+                                pickupServingChoiceEnabled = pickupServingChoiceEnabled,
+                                selectedPickupServing = state.selectedPickupServing,
+                            ),
+                        pickupServingChoiceEnabled = pickupServingChoiceEnabled,
                     )
                 if (orderCode == null) {
                     sendOrderCreateFailEvent(error = "null_order")

@@ -441,22 +441,26 @@ private fun PickupContent(
             pickupAddressList = createOrderType.pickupAddressList,
             onAction = onAction,
         )
-        PickupServingListBottomSheet(
-            pickupServingList = createOrderType.pickupServingList,
-            onAction = onAction,
-        )
+        if (createOrderType.isPickupServingChoiceEnabled) {
+            PickupServingListBottomSheet(
+                pickupServingList = createOrderType.pickupServingList,
+                onAction = onAction,
+            )
+        }
         if (createOrderType.isEnabled) {
             CommonContent(
                 viewState = viewState,
                 focusManager = focusManager,
                 onAction = onAction,
                 pickupServingContent = {
-                    PickupServingCard(
-                        selectedPickupServing = createOrderType.selectedPickupServing,
-                        isClickable = viewState.isFieldsEnabled,
-                        focusManager = focusManager,
-                        onAction = onAction,
-                    )
+                    if (createOrderType.isPickupServingChoiceEnabled) {
+                        PickupServingCard(
+                            selectedPickupServing = createOrderType.selectedPickupServing,
+                            isClickable = viewState.isFieldsEnabled,
+                            focusManager = focusManager,
+                            onAction = onAction,
+                        )
+                    }
                 },
             )
         } else {
@@ -1172,6 +1176,7 @@ private fun SelectedPickUpPreview() {
                             ),
                         hasOpenedCafe = true,
                         isEnabled = true,
+                        isPickupServingChoiceEnabled = true,
                         selectedPickupServing = "В пакете",
                         pickupServingList = pickupServingListPreviewMock,
                     ),
@@ -1208,6 +1213,7 @@ private fun PickupCreateOrderNotEnabledPreview() {
                             ),
                         hasOpenedCafe = true,
                         isEnabled = false,
+                        isPickupServingChoiceEnabled = false,
                         selectedPickupServing = "В пакете",
                         pickupServingList = pickupServingListPreviewMock,
                     ),

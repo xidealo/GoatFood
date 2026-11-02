@@ -7,6 +7,7 @@ import com.bunbeauty.core.model.order.Order
 import com.bunbeauty.core.model.order.OrderAddress
 import com.bunbeauty.core.model.order.OrderCode
 import com.bunbeauty.core.model.order.OrderStatus
+import com.bunbeauty.core.model.order.PickupServing
 import com.bunbeauty.core.model.payment_method.PaymentMethodName
 import com.bunbeauty.shared.data.mapper.order_product.IOrderProductMapper
 import com.bunbeauty.shared.data.network.model.order.get.LightOrderServer
@@ -116,10 +117,13 @@ class OrderMapper(
                     paymentMethod =
                         PaymentMethodName
                             .values()
-                            .firstOrNull { it.name == firstOrderWithProductEntity.paymentMethod },
+                            .firstOrNull { paymentMethodName ->
+                                paymentMethodName.name == firstOrderWithProductEntity.paymentMethod
+                            },
                     oldTotalCost = firstOrderWithProductEntity.oldTotalCost,
                     newTotalCost = firstOrderWithProductEntity.newTotalCost,
                     percentDiscount = firstOrderWithProductEntity.percentDiscount,
+                    pickupServing = firstOrderWithProductEntity.pickupServing.toPickupServing(),
                 )
             }.firstOrNull()
 
@@ -149,10 +153,13 @@ class OrderMapper(
             orderProductList = orderServer.oderProductList.map(orderProductMapper::toOrderProduct),
             paymentMethod =
                 PaymentMethodName.entries
-                    .firstOrNull { it.name == orderServer.paymentMethod },
+                    .firstOrNull { paymentMethodName ->
+                        paymentMethodName.name == orderServer.paymentMethod
+                    },
             oldTotalCost = orderServer.oldTotalCost,
             newTotalCost = orderServer.newTotalCost,
             percentDiscount = orderServer.percentDiscount,
+            pickupServing = orderServer.pickupServing.toPickupServing(),
         )
 
     override fun toOrderEntity(orderServer: OrderServer): OrderEntity =
@@ -178,6 +185,7 @@ class OrderMapper(
             oldTotalCost = orderServer.oldTotalCost,
             newTotalCost = orderServer.newTotalCost,
             percentDiscount = orderServer.percentDiscount,
+            pickupServing = orderServer.pickupServing.toPickupServing()?.name,
         )
 
     override fun toOrderPostServer(createdOrder: CreatedOrder): OrderV6PostServer =
@@ -201,3 +209,8 @@ class OrderMapper(
             pickupServing = createdOrder.pickupServing?.name,
         )
 }
+
+private fun String?.toPickupServing(): PickupServing? =
+    PickupServing.entries.firstOrNull { pickupServing ->
+        pickupServing.name == this
+    }
