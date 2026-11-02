@@ -38,10 +38,12 @@ subprojects {
                 description =
                     "Raises IPHONEOS_DEPLOYMENT_TARGET in the generated synthetic Pods " +
                         "project to $minDeploymentTarget (Xcode 27+ minimum)"
+                // Optional: file appears only after podInstallSyntheticIos (macOS + CocoaPods).
+                // Declaring it as a required InputFile breaks Gradle sync on Windows / clean builds.
                 val podsProjectFile =
                     layout.buildDirectory
                         .file("cocoapods/synthetic/ios/Pods/Pods.xcodeproj/project.pbxproj")
-                inputs.file(podsProjectFile).withPropertyName("podsProjectFile")
+                inputs.files(podsProjectFile).withPropertyName("podsProjectFile").optional()
                 outputs.upToDateWhen { false }
                 mustRunAfter("podInstallSyntheticIos")
                 doLast {

@@ -73,6 +73,7 @@ import papakarlo.designsystem.generated.resources.logo_small_mimino_dark
 import papakarlo.designsystem.generated.resources.logo_small_mimino_light
 
 private var BASE_THEME_FLAVOR: String = "papakarlo"
+
 var logoMedium: DrawableResource? = null
 var logoSmall: DrawableResource? = null
 
