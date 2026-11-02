@@ -26,6 +26,8 @@ import com.bunbeauty.designsystem.theme.color.VostochkaColors
 import com.bunbeauty.designsystem.theme.color.VostochkaDarkColors
 import com.bunbeauty.designsystem.theme.color.MiminoDarkColors
 import com.bunbeauty.designsystem.theme.color.MiminoLightColors
+import com.bunbeauty.designsystem.theme.color.MoroshkaDarkColors
+import com.bunbeauty.designsystem.theme.color.MoroshkaLightColors
 import com.bunbeauty.designsystem.theme.color.LocalAppColors
 import com.bunbeauty.designsystem.theme.color.PapaKarloDarkColors
 import com.bunbeauty.designsystem.theme.color.PapaKarloLightColors
@@ -49,6 +51,8 @@ import papakarlo.designsystem.generated.resources.logo_medium_mimino_dark
 import papakarlo.designsystem.generated.resources.logo_medium_mimino_light
 import papakarlo.designsystem.generated.resources.logo_medium_emojicenter_dark
 import papakarlo.designsystem.generated.resources.logo_medium_emojicenter_light
+import papakarlo.designsystem.generated.resources.logo_medium_moroshka_dark
+import papakarlo.designsystem.generated.resources.logo_medium_moroshka_light
 import papakarlo.designsystem.generated.resources.logo_medium_emoji
 import papakarlo.designsystem.generated.resources.logo_medium_estpoest
 import papakarlo.designsystem.generated.resources.logo_medium_gustopub
@@ -63,10 +67,13 @@ import papakarlo.designsystem.generated.resources.logo_medium_vostochka
 import papakarlo.designsystem.generated.resources.logo_medium_yuliar
 import papakarlo.designsystem.generated.resources.logo_small_emojicenter_dark
 import papakarlo.designsystem.generated.resources.logo_small_emojicenter_light
+import papakarlo.designsystem.generated.resources.logo_small_moroshka_dark
+import papakarlo.designsystem.generated.resources.logo_small_moroshka_light
 import papakarlo.designsystem.generated.resources.logo_small_mimino_dark
 import papakarlo.designsystem.generated.resources.logo_small_mimino_light
 
 private var BASE_THEME_FLAVOR: String = "papakarlo"
+
 var logoMedium: DrawableResource? = null
 var logoSmall: DrawableResource? = null
 
@@ -266,6 +273,26 @@ private fun getAppColors(
                 EmojiCenterDarkColors
             } else {
                 EmojiCenterLightColors
+            }
+        }
+
+        FoodDeliveryCompany.MOROSHKA -> {
+            logoMedium =
+                if (isDarkTheme) {
+                    Res.drawable.logo_medium_moroshka_dark
+                } else {
+                    Res.drawable.logo_medium_moroshka_light
+                }
+            logoSmall =
+                if (isDarkTheme) {
+                    Res.drawable.logo_small_moroshka_dark
+                } else {
+                    Res.drawable.logo_small_moroshka_light
+                }
+            if (isDarkTheme) {
+                MoroshkaDarkColors
+            } else {
+                MoroshkaLightColors
             }
         }
     }

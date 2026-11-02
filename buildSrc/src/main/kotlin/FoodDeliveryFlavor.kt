@@ -65,6 +65,10 @@ enum class FoodDeliveryFlavor(
     EMOJI_CENTER(
         key = "emojicenter",
         applicationId = "com.bunbeauty.emojicenter"
+    ),
+    MOROSHKA(
+        key = "moroshka",
+        applicationId = "com.bunbeauty.moroshka"
     );
 
     val assembleReleaseBundle: String
