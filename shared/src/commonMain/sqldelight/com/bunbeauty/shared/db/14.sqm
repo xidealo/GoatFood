@@ -1,0 +1,29 @@
+ALTER TABLE cafeEntity ADD COLUMN pickupServingChoiceEnabled INTEGER NOT NULL DEFAULT 0;
+ALTER TABLE orderEntity ADD COLUMN pickupServing TEXT;
+
+DROP VIEW IF EXISTS orderWithProductEntity;
+CREATE VIEW orderWithProductEntity AS
+SELECT orderEntity.*,
+    orderProductEntity.uuid AS orderProductUuid,
+    orderProductEntity.count AS orderProductCount,
+    orderProductEntity.name AS orderProductName,
+    orderProductEntity.newPrice AS orderProductNewPrice,
+    orderProductEntity.oldPrice AS orderProductOldPrice,
+    orderProductEntity.utils AS orderProductUtils,
+    orderProductEntity.nutrition AS orderProductNutrition,
+    orderProductEntity.description AS orderProductDescription,
+    orderProductEntity.comboDescription AS orderProductComboDescription,
+    orderProductEntity.photoLink AS orderProductPhotoLink,
+    orderProductEntity.barcode AS orderProductBarcode,
+    orderProductEntity.newCommonPrice AS orderProductNewCommonPrice,
+    orderProductEntity.oldCommonPrice AS orderProductOldCommonPrice,
+    orderProductEntity.newTotalCost AS orderProductNewTotalCost,
+    orderProductEntity.oldTotalCost AS orderProductOldTotalCost,
+    orderProductEntity.orderUuid AS orderUuid,
+    orderAdditionEntity.uuid AS orderAdditionEntityUuid,
+    orderAdditionEntity.name AS orderAdditionEntityName,
+    orderAdditionEntity.priority AS orderAdditionEntityPriority,
+    orderAdditionEntity.orderProductUuid AS orderAdditionEntityOrderProductUuid
+FROM orderEntity
+JOIN orderProductEntity ON orderEntity.uuid = orderProductEntity.orderUuid
+LEFT JOIN orderAdditionEntity ON orderProductEntity.uuid = orderAdditionEntity.orderProductUuid;

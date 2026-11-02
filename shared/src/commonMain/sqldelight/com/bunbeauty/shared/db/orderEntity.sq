@@ -23,6 +23,7 @@ CREATE TABLE IF NOT EXISTS orderEntity (
     oldTotalCost INTEGER AS Int,
     newTotalCost INTEGER AS Int  NOT NULL,
     percentDiscount INTEGER AS Int,
+    pickupServing TEXT,
     FOREIGN KEY (userUuid) REFERENCES userEntity(uuid) ON DELETE CASCADE
 );
 CREATE VIEW orderWithProductEntity AS

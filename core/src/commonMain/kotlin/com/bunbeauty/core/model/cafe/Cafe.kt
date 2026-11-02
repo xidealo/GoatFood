@@ -13,6 +13,7 @@ data class Cafe(
     val workType: WorkType,
     val workload: Workload,
     val additionalUtensils: Boolean,
+    val pickupServingChoiceEnabled: Boolean = false,
 ) {
     enum class WorkType {
         DELIVERY,

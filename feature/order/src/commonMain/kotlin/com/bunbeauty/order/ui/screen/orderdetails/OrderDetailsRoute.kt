@@ -51,6 +51,7 @@ import papakarlo.designsystem.generated.resources.msg_order_details_discount
 import papakarlo.designsystem.generated.resources.msg_order_details_order_cost
 import papakarlo.designsystem.generated.resources.msg_order_details_payment_method
 import papakarlo.designsystem.generated.resources.msg_order_details_pickup_method
+import papakarlo.designsystem.generated.resources.msg_order_details_serving
 
 @Composable
 fun OrderDetailsRoute(
@@ -278,6 +279,15 @@ private fun OrderInfoCard(
                     )
                 }
             }
+            orderInfo.pickupServing?.let { pickupServing ->
+                OrderInfoTextColumn(
+                    modifier =
+                        Modifier
+                            .padding(top = 8.dp),
+                    hint = stringResource(Res.string.msg_order_details_serving),
+                    info = pickupServing,
+                )
+            }
             OrderInfoTextColumn(
                 modifier =
                     Modifier
@@ -480,4 +490,5 @@ private fun getOrderInfo(): OrderDetailsViewState.OrderInfo =
         statusName = "Готовится",
         deferredTimeHint = "Время самовывоза",
         paymentMethod = "Наличными",
+        pickupServing = null,
     )

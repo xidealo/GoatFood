@@ -50,6 +50,7 @@ data class CreateOrderViewState(
             val pickupAddressList: PickupAddressListUI,
             val hasOpenedCafe: Boolean,
             val isEnabled: Boolean,
+            val isPickupServingChoiceEnabled: Boolean,
             val selectedPickupServing: String,
             val pickupServingList: PickupServingListUI,
         ) : CreateOrderType

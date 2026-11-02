@@ -1,5 +1,6 @@
 package com.bunbeauty.shared.data.network.model.order.post
 
+import kotlinx.serialization.EncodeDefault
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
@@ -17,8 +18,9 @@ class OrderV6PostServer(
     val orderProducts: List<OrderProductPostServer>,
     @SerialName("paymentMethod")
     val paymentMethod: String?,
+    @EncodeDefault(EncodeDefault.Mode.NEVER)
     @SerialName("pickupServing")
-    val pickupServing: String?,
+    val pickupServing: String? = null,
 )
 
 @Serializable

@@ -37,6 +37,8 @@ class OrderServer(
     val newTotalCost: Int,
     @SerialName("percentDiscount")
     val percentDiscount: Int?,
+    @SerialName("pickupServing")
+    val pickupServing: String? = null,
 )
 
 @Serializable

@@ -31,8 +31,15 @@ class CreateOrderUseCase(
         timeZone: String,
         paymentMethod: String?,
         pickupServing: PickupServing?,
+        pickupServingChoiceEnabled: Boolean,
     ): OrderCode? {
-        if (!isPickupServingValid(isDelivery = isDelivery, pickupServing = pickupServing)) {
+        if (
+            !isPickupServingValid(
+                isDelivery = isDelivery,
+                pickupServingChoiceEnabled = pickupServingChoiceEnabled,
+                pickupServing = pickupServing,
+            )
+        ) {
             return null
         }
 
@@ -90,12 +97,17 @@ class CreateOrderUseCase(
 
     private fun isPickupServingValid(
         isDelivery: Boolean,
+        pickupServingChoiceEnabled: Boolean,
         pickupServing: PickupServing?,
     ): Boolean =
         if (isDelivery) {
             pickupServing == null
         } else {
-            pickupServing != null
+            if (pickupServingChoiceEnabled) {
+                pickupServing != null
+            } else {
+                pickupServing == null
+            }
         }
 
     private fun getSortedAdditionUuidList(cartProduct: CartProduct) =

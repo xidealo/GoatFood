@@ -34,6 +34,7 @@ class CafeDao(
                     workType = cafeEntity.workType,
                     workload = cafeEntity.workload,
                     additionalUtensils = cafeEntity.additionalUtensils,
+                    pickupServingChoiceEnabled = cafeEntity.pickupServingChoiceEnabled,
                 )
             }
         }

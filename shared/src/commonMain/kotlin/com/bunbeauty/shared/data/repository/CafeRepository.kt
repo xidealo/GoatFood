@@ -34,18 +34,18 @@ class CafeRepository(
                         .getCafeListByCityUuid(cityUuid = selectedCityUuid)
                         .dataOrNull()
                         ?.results
-                        .also { cafeServerList ->
-                            if (cafeServerList != null) {
+                        .also { cafeList ->
+                            if (cafeList != null) {
                                 withContext(ioDispatcher) {
                                     cafeDao.insertCafeList(
-                                        cafeServerList.map { cafeServer ->
-                                            cafeServer.toCafeEntity()
+                                        cafeList.map { cafeListItem ->
+                                            cafeListItem.toCafeEntity()
                                         },
                                     )
                                 }
                             }
-                        }?.map { cafeServer ->
-                            cafeServer.toCafe()
+                        }?.map { cafeListItem ->
+                            cafeListItem.toCafe()
                         } ?: cafeDao
                         .getCafeListByCityUuid(cityUuid = selectedCityUuid)
                         .map { cafeEntity ->
