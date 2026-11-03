@@ -28,6 +28,8 @@ import com.bunbeauty.designsystem.theme.color.MiminoDarkColors
 import com.bunbeauty.designsystem.theme.color.MiminoLightColors
 import com.bunbeauty.designsystem.theme.color.MoroshkaDarkColors
 import com.bunbeauty.designsystem.theme.color.MoroshkaLightColors
+import com.bunbeauty.designsystem.theme.color.UrbanVibeDarkColors
+import com.bunbeauty.designsystem.theme.color.UrbanVibeLightColors
 import com.bunbeauty.designsystem.theme.color.LocalAppColors
 import com.bunbeauty.designsystem.theme.color.PapaKarloDarkColors
 import com.bunbeauty.designsystem.theme.color.PapaKarloLightColors
@@ -53,6 +55,8 @@ import papakarlo.designsystem.generated.resources.logo_medium_emojicenter_dark
 import papakarlo.designsystem.generated.resources.logo_medium_emojicenter_light
 import papakarlo.designsystem.generated.resources.logo_medium_moroshka_dark
 import papakarlo.designsystem.generated.resources.logo_medium_moroshka_light
+import papakarlo.designsystem.generated.resources.logo_medium_urbanvibe_dark
+import papakarlo.designsystem.generated.resources.logo_medium_urbanvibe_light
 import papakarlo.designsystem.generated.resources.logo_medium_emoji
 import papakarlo.designsystem.generated.resources.logo_medium_estpoest
 import papakarlo.designsystem.generated.resources.logo_medium_gustopub
@@ -69,6 +73,8 @@ import papakarlo.designsystem.generated.resources.logo_small_emojicenter_dark
 import papakarlo.designsystem.generated.resources.logo_small_emojicenter_light
 import papakarlo.designsystem.generated.resources.logo_small_moroshka_dark
 import papakarlo.designsystem.generated.resources.logo_small_moroshka_light
+import papakarlo.designsystem.generated.resources.logo_small_urbanvibe_dark
+import papakarlo.designsystem.generated.resources.logo_small_urbanvibe_light
 import papakarlo.designsystem.generated.resources.logo_small_mimino_dark
 import papakarlo.designsystem.generated.resources.logo_small_mimino_light
 
@@ -293,6 +299,26 @@ private fun getAppColors(
                 MoroshkaDarkColors
             } else {
                 MoroshkaLightColors
+            }
+        }
+
+        FoodDeliveryCompany.URBAN_VIBE -> {
+            logoMedium =
+                if (isDarkTheme) {
+                    Res.drawable.logo_medium_urbanvibe_dark
+                } else {
+                    Res.drawable.logo_medium_urbanvibe_light
+                }
+            logoSmall =
+                if (isDarkTheme) {
+                    Res.drawable.logo_small_urbanvibe_dark
+                } else {
+                    Res.drawable.logo_small_urbanvibe_light
+                }
+            if (isDarkTheme) {
+                UrbanVibeDarkColors
+            } else {
+                UrbanVibeLightColors
             }
         }
     }

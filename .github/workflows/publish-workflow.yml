@@ -76,7 +76,8 @@ jobs:
           "voljane",
           "mimino",
           "emojicenter",
-          "moroshka"
+          "moroshka",
+          "urbanvibe"
         ]
     steps:
       - uses: actions/checkout@v5
