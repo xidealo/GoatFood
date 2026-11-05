@@ -51,6 +51,7 @@
   top: 14px;
   transition: background 0.18s ease, color 0.18s ease;
   width: 44px;
+  z-index: 1;
 }
 
 .bb-modal-close:hover {
@@ -130,7 +131,7 @@
 .bb-success {
   background: hsl(var(--bb-lime));
   color: hsl(var(--bb-ink));
-  padding: 28px;
+  padding: 36px 28px 28px;
 }
 
 .bb-success strong {

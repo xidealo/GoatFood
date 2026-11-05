@@ -7,12 +7,13 @@ import com.bunbeauty.core.model.order.Order
 import com.bunbeauty.core.model.order.OrderAddress
 import com.bunbeauty.core.model.order.OrderCode
 import com.bunbeauty.core.model.order.OrderStatus
+import com.bunbeauty.core.model.order.PickupServing
 import com.bunbeauty.core.model.payment_method.PaymentMethodName
 import com.bunbeauty.shared.data.mapper.order_product.IOrderProductMapper
 import com.bunbeauty.shared.data.network.model.order.get.LightOrderServer
 import com.bunbeauty.shared.data.network.model.order.get.OrderServer
 import com.bunbeauty.shared.data.network.model.order.post.OrderAddressPostServer
-import com.bunbeauty.shared.data.network.model.order.post.OrderPostServer
+import com.bunbeauty.shared.data.network.model.order.post.OrderV6PostServer
 import com.bunbeauty.shared.db.LightOrderEntity
 import com.bunbeauty.shared.db.OrderEntity
 import com.bunbeauty.shared.db.OrderWithProductEntity
@@ -116,10 +117,13 @@ class OrderMapper(
                     paymentMethod =
                         PaymentMethodName
                             .values()
-                            .firstOrNull { it.name == firstOrderWithProductEntity.paymentMethod },
+                            .firstOrNull { paymentMethodName ->
+                                paymentMethodName.name == firstOrderWithProductEntity.paymentMethod
+                            },
                     oldTotalCost = firstOrderWithProductEntity.oldTotalCost,
                     newTotalCost = firstOrderWithProductEntity.newTotalCost,
                     percentDiscount = firstOrderWithProductEntity.percentDiscount,
+                    pickupServing = firstOrderWithProductEntity.pickupServing.toPickupServing(),
                 )
             }.firstOrNull()
 
@@ -149,10 +153,13 @@ class OrderMapper(
             orderProductList = orderServer.oderProductList.map(orderProductMapper::toOrderProduct),
             paymentMethod =
                 PaymentMethodName.entries
-                    .firstOrNull { it.name == orderServer.paymentMethod },
+                    .firstOrNull { paymentMethodName ->
+                        paymentMethodName.name == orderServer.paymentMethod
+                    },
             oldTotalCost = orderServer.oldTotalCost,
             newTotalCost = orderServer.newTotalCost,
             percentDiscount = orderServer.percentDiscount,
+            pickupServing = orderServer.pickupServing.toPickupServing(),
         )
 
     override fun toOrderEntity(orderServer: OrderServer): OrderEntity =
@@ -178,10 +185,11 @@ class OrderMapper(
             oldTotalCost = orderServer.oldTotalCost,
             newTotalCost = orderServer.newTotalCost,
             percentDiscount = orderServer.percentDiscount,
+            pickupServing = orderServer.pickupServing.toPickupServing()?.name,
         )
 
-    override fun toOrderPostServer(createdOrder: CreatedOrder): OrderPostServer =
-        OrderPostServer(
+    override fun toOrderPostServer(createdOrder: CreatedOrder): OrderV6PostServer =
+        OrderV6PostServer(
             isDelivery = createdOrder.isDelivery,
             address =
                 OrderAddressPostServer(
@@ -198,5 +206,11 @@ class OrderMapper(
             deferredTime = createdOrder.deferredTime,
             orderProducts = createdOrder.orderProducts.map(orderProductMapper::toPostServerModel),
             paymentMethod = createdOrder.paymentMethod,
+            pickupServing = createdOrder.pickupServing?.name,
         )
 }
+
+private fun String?.toPickupServing(): PickupServing? =
+    PickupServing.entries.firstOrNull { pickupServing ->
+        pickupServing.name == this
+    }

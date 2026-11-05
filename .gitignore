@@ -104,6 +104,9 @@ _tar_test/
 landing/node_modules/
 landing/dist/
 landing/*.tsbuildinfo
+landing/.env
+landing/.env.*
+!landing/.env.example
 
 # Nested Amvera deploy git — package itself tracked in feature/web-kmp
 /amvera/.git/

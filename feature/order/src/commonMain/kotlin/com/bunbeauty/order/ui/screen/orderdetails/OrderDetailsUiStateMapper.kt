@@ -7,17 +7,20 @@ import com.bunbeauty.core.extension.getOrderStatusName
 import com.bunbeauty.core.extension.getPickupMethodString
 import com.bunbeauty.core.extension.getTimeString
 import com.bunbeauty.core.extension.mapToString
+import com.bunbeauty.core.model.order.PickupServing
 import com.bunbeauty.order.presentation.order_details.OrderDetails
 import org.jetbrains.compose.resources.stringResource
 import papakarlo.designsystem.generated.resources.Res
 import papakarlo.designsystem.generated.resources.asap
+import papakarlo.designsystem.generated.resources.pickup_serving_bag
+import papakarlo.designsystem.generated.resources.pickup_serving_tray
 
 @Composable
 fun OrderDetails.DataState.mapToOrderDetailsViewState() =
     OrderDetailsViewState(
         orderProductItemList =
-            orderDetailsData.orderProductItemList.map {
-                it.toItem()
+            orderDetailsData.orderProductItemList.map { orderProductItem ->
+                orderProductItem.toItem()
             },
         deliveryCost = orderDetailsData.deliveryCost,
         newTotalCost = orderDetailsData.newTotalCost,
@@ -35,6 +38,7 @@ fun OrderDetails.DataState.mapToOrderDetailsViewState() =
                     pickupMethod = getPickupMethodString(orderInfo.isDelivery),
                     deferredTimeHint = getDeferredString(orderInfo.isDelivery),
                     paymentMethod = orderInfo.paymentMethod?.mapToString(),
+                    pickupServing = pickupServingText(pickupServing = orderInfo.pickupServing),
                 )
             },
         code = orderDetailsData.orderInfo?.code.orEmpty(),
@@ -42,3 +46,11 @@ fun OrderDetails.DataState.mapToOrderDetailsViewState() =
         state = screenState,
         orderUuid = orderUuid,
     )
+
+@Composable
+private fun pickupServingText(pickupServing: PickupServing?): String? =
+    when (pickupServing) {
+        PickupServing.TRAY -> stringResource(Res.string.pickup_serving_tray)
+        PickupServing.BAG -> stringResource(Res.string.pickup_serving_bag)
+        null -> null
+    }

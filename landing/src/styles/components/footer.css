@@ -4,7 +4,7 @@
   display: flex;
   flex-direction: column;
   font-size: var(--bb-fs-xs);
-  gap: 10px;
+  gap: 12px;
   padding: 22px 0 28px;
 }
 
@@ -23,6 +23,24 @@
   color: hsl(var(--bb-accent));
 }
 
+.bb-footer-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 20px;
+}
+
+.bb-footer-links a {
+  color: hsl(var(--bb-accent));
+  font-size: var(--bb-fs-small);
+  font-weight: 600;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.bb-footer-links a:hover {
+  color: hsl(var(--bb-fg));
+}
+
 .bb-footer-legal {
   margin: 0;
   text-wrap: pretty;
@@ -30,6 +48,11 @@
 
 @media (max-width: 620px) {
   .bb-footer-row {
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .bb-footer-links {
     flex-direction: column;
     gap: 10px;
   }

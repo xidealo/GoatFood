@@ -32,11 +32,12 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.dp
 import androidx.navigation.compose.rememberNavController
-import com.bunbeauty.designsystem.isWeb
 import com.bunbeauty.designsystem.theme.FoodDeliveryTheme
 import com.bunbeauty.designsystem.ui.LocalBottomBarPadding
 import com.bunbeauty.designsystem.ui.LocalStatusBarColor
 import com.bunbeauty.designsystem.ui.SharedTransitionScopeComposition
+import com.bunbeauty.designsystem.ui.element.footer.LocalSiteFooterActions
+import com.bunbeauty.designsystem.ui.element.footer.SiteFooterActions
 import com.bunbeauty.shared.presentation.MainViewModel
 import com.bunbeauty.shared.ui.navigation.FoodDeliveryNavHost
 import com.bunbeauty.shared.ui.navigation.emptyNavOptions
@@ -75,11 +76,27 @@ fun MainScreen(
             WindowInsets.navigationBars.getBottom(this).toDp()
         }
 
+    val siteFooterActions =
+        remember(navController) {
+            SiteFooterActions(
+                onUserAgreementClick = {
+                    navController.navigateToUserAgreementScreen(emptyNavOptions)
+                },
+                onPrivacyPolicyClick = {
+                    navController.navigateToPrivacyPolicyScreen(emptyNavOptions)
+                },
+                onTermsOfServiceClick = {
+                    navController.navigateToTermsOfServiceScreen(emptyNavOptions)
+                },
+            )
+        }
+
     barColorCallback.invoke(statusBarColor.value)
     SharedTransitionLayout {
         CompositionLocalProvider(
             LocalStatusBarColor provides statusBarColor,
             LocalBottomBarPadding provides localBottomBarPadding,
+            LocalSiteFooterActions provides siteFooterActions,
             SharedTransitionScopeComposition provides this,
         ) {
             Scaffold(
@@ -119,20 +136,6 @@ fun MainScreen(
                                 viewModel.showErrorMessage(
                                     message,
                                 )
-                            },
-                        )
-                    }
-
-                    if (isWeb) {
-                        SiteFooter(
-                            onUserAgreementClick = {
-                                navController.navigateToUserAgreementScreen(emptyNavOptions)
-                            },
-                            onPrivacyPolicyClick = {
-                                navController.navigateToPrivacyPolicyScreen(emptyNavOptions)
-                            },
-                            onTermsOfServiceClick = {
-                                navController.navigateToTermsOfServiceScreen(emptyNavOptions)
                             },
                         )
                     }

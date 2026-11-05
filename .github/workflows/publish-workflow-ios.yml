@@ -25,6 +25,7 @@ on:
           - estpoest
           - taverna
           - mimino
+          - vostochka
           - all
 
 concurrency:
@@ -118,6 +119,7 @@ jobs:
             "taverna|tavernaRes|com.bunbeauty.taverna"
             "voljane|voljaneRes|com.bunbeauty.voljane"
             "mimino|miminoRes|com.bunbeauty.mimino"
+            "vostochka|vostochkaRes|com.bunbeauty.vostochka"
           )
           APPS=()
           if [ "$SELECTED_APP" = "all" ]; then

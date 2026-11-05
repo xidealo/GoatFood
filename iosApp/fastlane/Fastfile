@@ -76,6 +76,7 @@ platform :ios do
      taverna:      { id: "com.bunbeauty.taverna", scheme: "taverna" },
      voljane:      { id: "com.bunbeauty.voljane", scheme: "voljane" },
      mimino:       { id: "com.bunbeauty.mimino", scheme: "mimino" },
+     vostochka:    { id: "com.bunbeauty.vostochka", scheme: "vostochka" },
      # legenda: нет AppStore-профиля в match-репозитории — раскомментировать после:
      # bundle exec fastlane match appstore -a com.bunbeauty.legenda
      # legenda:      { id: "com.bunbeauty.legenda", scheme: "legenda" },

@@ -48,6 +48,7 @@ import com.bunbeauty.designsystem.ui.element.addition.AdditionCardItem
 import com.bunbeauty.designsystem.ui.element.addition.AdditionRowItem
 import com.bunbeauty.designsystem.ui.element.button.FoodDeliveryExtendedFab
 import com.bunbeauty.designsystem.ui.element.card.FoodDeliveryItem
+import com.bunbeauty.designsystem.ui.element.footer.webSiteFooterItem
 import com.bunbeauty.designsystem.ui.screen.ErrorScreen
 import com.bunbeauty.designsystem.ui.screen.LoadingScreen
 import com.bunbeauty.productdetails.presentation.AdditionItem
@@ -388,6 +389,7 @@ private fun ProductDetailsSuccessScreen(
                     }
                 }
             }
+            webSiteFooterItem(modifier = Modifier.padding(top = 24.dp))
             item {
                 Spacer(modifier = Modifier.height(FoodDeliveryTheme.dimensions.scrollScreenBottomSpace))
             }

@@ -1,10 +1,10 @@
 package com.bunbeauty.shared.data.mapper.cafe
 
 import com.bunbeauty.core.model.cafe.Cafe
-import com.bunbeauty.shared.data.network.model.CafeServer
+import com.bunbeauty.shared.data.network.model.CafeListItemServer
 import com.bunbeauty.shared.db.CafeEntity
 
-fun CafeServer.toCafeEntity(): CafeEntity =
+fun CafeListItemServer.toCafeEntity(): CafeEntity =
     CafeEntity(
         uuid = uuid,
         fromTime = fromTime,
@@ -19,6 +19,7 @@ fun CafeServer.toCafeEntity(): CafeEntity =
         workType = workType,
         workload = workload,
         additionalUtensils = additionalUtensils,
+        pickupServingChoiceEnabled = pickupServingChoiceEnabled,
     )
 
 fun CafeEntity.toCafe(): Cafe =
@@ -35,9 +36,10 @@ fun CafeEntity.toCafe(): Cafe =
         workType = Cafe.WorkType.valueOf(workType),
         workload = Cafe.Workload.valueOf(workload),
         additionalUtensils = additionalUtensils,
+        pickupServingChoiceEnabled = pickupServingChoiceEnabled,
     )
 
-fun CafeServer.toCafe(): Cafe =
+fun CafeListItemServer.toCafe(): Cafe =
     Cafe(
         uuid = uuid,
         fromTime = fromTime,
@@ -51,4 +53,5 @@ fun CafeServer.toCafe(): Cafe =
         workType = Cafe.WorkType.valueOf(workType),
         workload = Cafe.Workload.valueOf(workload),
         additionalUtensils = additionalUtensils,
+        pickupServingChoiceEnabled = pickupServingChoiceEnabled,
     )

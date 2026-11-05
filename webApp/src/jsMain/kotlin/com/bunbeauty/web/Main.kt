@@ -1,6 +1,9 @@
 package com.bunbeauty.web
 
+import androidx.compose.runtime.SideEffect
 import androidx.compose.ui.ExperimentalComposeUiApi
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.window.ComposeViewport
 import coil3.ImageLoader
 import coil3.compose.setSingletonImageLoaderFactory
@@ -26,9 +29,19 @@ import kotlinx.coroutines.launch
 import org.koin.dsl.module
 import org.w3c.dom.Worker
 
-// Sets the browser tab icon (favicon) to the brand logo bundled in
-// composeResources. index.html has no <link rel="icon">, so we create/update it
-// at runtime. Modern browsers accept .webp favicons.
+
+private fun applyThemeColor(color: Color) {
+    val rgb = color.toArgb() and 0xFFFFFF
+    val hex = "#" + rgb.toString(16).padStart(6, '0').uppercase()
+    val meta =
+        document.querySelector("meta[name='theme-color']")
+            ?: document.createElement("meta").also { element ->
+                element.setAttribute("name", "theme-color")
+                document.head?.appendChild(element)
+            }
+    meta.setAttribute("content", hex)
+}
+
 private fun applyFavicon(flavor: String) {
     val href = "composeResources/papakarlo.designsystem.generated.resources/drawable/logo_small_$flavor.webp"
     val link =
@@ -112,6 +125,10 @@ fun main() {
             }
 
             FoodDeliveryTheme(flavor = flavor) {
+                val themeColor = FoodDeliveryTheme.colors.mainColors.primary
+                SideEffect {
+                    applyThemeColor(themeColor)
+                }
                 MainScreen()
             }
         }

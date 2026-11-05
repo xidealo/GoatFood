@@ -2,18 +2,18 @@ package com.bunbeauty.shared.data.network.api
 
 import com.bunbeauty.core.ApiResult
 import com.bunbeauty.shared.data.network.model.AddressServer
-import com.bunbeauty.shared.data.network.model.CafeServer
+import com.bunbeauty.shared.data.network.model.CafeListItemServer
 import com.bunbeauty.shared.data.network.model.CategoryServer
 import com.bunbeauty.shared.data.network.model.CityServer
 import com.bunbeauty.shared.data.network.model.DiscountServer
 import com.bunbeauty.shared.data.network.model.FavoriteServer
-import com.bunbeauty.shared.data.network.model.PostFavoriteServer
 import com.bunbeauty.shared.data.network.model.ForceUpdateVersionServer
 import com.bunbeauty.shared.data.network.model.LinkServer
 import com.bunbeauty.shared.data.network.model.ListServer
 import com.bunbeauty.shared.data.network.model.MenuProductServer
 import com.bunbeauty.shared.data.network.model.PaymentMethodServer
 import com.bunbeauty.shared.data.network.model.PaymentServer
+import com.bunbeauty.shared.data.network.model.PostFavoriteServer
 import com.bunbeauty.shared.data.network.model.RecommendationDataServer
 import com.bunbeauty.shared.data.network.model.SettingsServer
 import com.bunbeauty.shared.data.network.model.StreetServer
@@ -28,7 +28,7 @@ import com.bunbeauty.shared.data.network.model.order.get.LightOrderServer
 import com.bunbeauty.shared.data.network.model.order.get.OrderCodeServer
 import com.bunbeauty.shared.data.network.model.order.get.OrderServer
 import com.bunbeauty.shared.data.network.model.order.get.OrderUpdateServer
-import com.bunbeauty.shared.data.network.model.order.post.OrderPostServer
+import com.bunbeauty.shared.data.network.model.order.post.OrderV6PostServer
 import com.bunbeauty.shared.data.network.model.profile.get.ProfileServer
 import com.bunbeauty.shared.data.network.model.profile.patch.PatchUserServer
 import kotlinx.coroutines.flow.Flow
@@ -42,7 +42,7 @@ interface NetworkConnector {
 
     suspend fun getCityList(): ApiResult<ListServer<CityServer>>
 
-    suspend fun getCafeListByCityUuid(cityUuid: String): ApiResult<ListServer<CafeServer>>
+    suspend fun getCafeListByCityUuid(cityUuid: String): ApiResult<ListServer<CafeListItemServer>>
 
     suspend fun getStreetListByCityUuid(cityUuid: String): ApiResult<ListServer<StreetServer>>
 
@@ -107,7 +107,7 @@ interface NetworkConnector {
 
     suspend fun postOrder(
         token: String,
-        order: OrderPostServer,
+        order: OrderV6PostServer,
     ): ApiResult<OrderCodeServer>
 
     suspend fun postCodeRequest(codeRequest: CodeRequestServer): ApiResult<AuthSessionServer>

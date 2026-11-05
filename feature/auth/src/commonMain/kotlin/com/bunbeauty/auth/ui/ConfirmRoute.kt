@@ -6,8 +6,6 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.widthIn
-import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -25,7 +23,9 @@ import com.bunbeauty.designsystem.theme.FoodDeliveryTheme
 import com.bunbeauty.designsystem.ui.LocalBottomBarPadding
 import com.bunbeauty.designsystem.ui.element.FoodDeliveryScaffold
 import com.bunbeauty.designsystem.ui.element.button.MainButton
+import com.bunbeauty.designsystem.ui.element.footer.WebSiteFooter
 import com.bunbeauty.designsystem.ui.getIsImeVisible
+import com.bunbeauty.designsystem.ui.ignoreHorizontalParentPadding
 import com.bunbeauty.designsystem.ui.screen.LoadingScreen
 import org.jetbrains.compose.resources.getString
 import org.jetbrains.compose.resources.stringResource
@@ -194,7 +194,6 @@ private fun ConfirmScreenSuccess(
         modifier =
             Modifier
                 .fillMaxSize()
-                .verticalScroll(rememberScrollState())
                 .padding(FoodDeliveryTheme.dimensions.mediumSpace),
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
@@ -214,6 +213,14 @@ private fun ConfirmScreenSuccess(
             onAction(Confirm.Action.CheckCode(code))
         }
         Spacer(modifier = Modifier.weight(1f))
+
+        WebSiteFooter(
+            modifier =
+                Modifier.ignoreHorizontalParentPadding(
+                    horizontal = FoodDeliveryTheme.dimensions.mediumSpace,
+                ),
+        )
+
         Spacer(modifier = Modifier.height(FoodDeliveryTheme.dimensions.scrollScreenBottomSpace))
     }
 }

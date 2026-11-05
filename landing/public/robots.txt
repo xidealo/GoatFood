@@ -1,2 +1,8 @@
 User-agent: *
 Allow: /
+
+User-agent: Yandex
+Allow: /
+
+Sitemap: https://www.goatfood.ru/sitemap.xml
+Host: https://www.goatfood.ru

@@ -3,7 +3,6 @@ package com.bunbeauty.order.ui.screen.orderlist
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -19,6 +18,7 @@ import com.bunbeauty.designsystem.theme.FoodDeliveryTheme
 import com.bunbeauty.designsystem.ui.LocalBottomBarPadding
 import com.bunbeauty.designsystem.ui.element.FoodDeliveryScaffold
 import com.bunbeauty.designsystem.ui.element.card.FoodDeliveryItem
+import com.bunbeauty.designsystem.ui.element.footer.WebStickyFooterLazyColumn
 import com.bunbeauty.designsystem.ui.screen.EmptyScreen
 import com.bunbeauty.designsystem.ui.screen.ErrorScreen
 import com.bunbeauty.designsystem.ui.screen.LoadingScreen
@@ -148,7 +148,7 @@ private fun OrderListScreenSuccess(
             Modifier
                 .fillMaxSize(),
     ) {
-        LazyColumn(
+        WebStickyFooterLazyColumn(
             modifier = Modifier.fillMaxSize(),
             contentPadding =
                 PaddingValues(

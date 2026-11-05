@@ -9,6 +9,7 @@ class CreatedOrder(
     val deferredTime: Long?,
     val orderProducts: List<CreatedOrderProduct>,
     val paymentMethod: String?,
+    val pickupServing: PickupServing?,
 )
 
 class CreatedOrderAddress(

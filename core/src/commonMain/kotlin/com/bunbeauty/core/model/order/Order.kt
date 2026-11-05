@@ -20,6 +20,7 @@ data class Order(
     val oldTotalCost: Int?,
     val newTotalCost: Int,
     val percentDiscount: Int?,
+    val pickupServing: PickupServing? = null,
 )
 
 data class OrderAddress(

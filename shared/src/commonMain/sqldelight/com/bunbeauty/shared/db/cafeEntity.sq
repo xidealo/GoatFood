@@ -14,13 +14,14 @@ CREATE TABLE cafeEntity (
     isVisible INTEGER AS Boolean NOT NULL,
     workType TEXT NOT NULL,
     workload TEXT NOT NULL,
-    additionalUtensils INTEGER AS Boolean NOT NULL
+    additionalUtensils INTEGER AS Boolean NOT NULL,
+    pickupServingChoiceEnabled INTEGER AS Boolean NOT NULL
 );
 
 insertCafe:
 INSERT OR REPLACE
 INTO cafeEntity
-VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
+VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
 
 getCafeListByCityUuid:
 SELECT *

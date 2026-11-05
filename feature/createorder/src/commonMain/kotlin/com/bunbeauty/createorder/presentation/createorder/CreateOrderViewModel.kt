@@ -39,6 +39,7 @@ import com.bunbeauty.core.domain.user.IUserInteractor
 import com.bunbeauty.core.extension.launchSafe
 import com.bunbeauty.core.model.cafe.Cafe
 import com.bunbeauty.core.model.date_time.Time
+import com.bunbeauty.core.model.order.PickupServing
 import com.bunbeauty.core.motivation.toMotivationData
 import kotlinx.coroutines.Job
 
@@ -177,6 +178,18 @@ class CreateOrderViewModel(
 
             is CreateOrder.Action.ChangePaymentMethod -> {
                 changePaymentMethod(paymentMethodUuid = action.paymentMethodUuid)
+            }
+
+            CreateOrder.Action.PickupServingClick -> {
+                pickupServingClick()
+            }
+
+            CreateOrder.Action.HidePickupServingList -> {
+                hidePickupServingList()
+            }
+
+            is CreateOrder.Action.ChangePickupServing -> {
+                changePickupServing(pickupServing = action.pickupServing)
             }
 
             is CreateOrder.Action.ChangeWithoutChangeChecked -> {
@@ -426,6 +439,46 @@ class CreateOrderViewModel(
         }
     }
 
+    private fun pickupServingClick() {
+        setState {
+            copy(
+                isPickupServingListShown = true,
+            )
+        }
+    }
+
+    private fun hidePickupServingList() {
+        setState {
+            copy(
+                isPickupServingListShown = false,
+            )
+        }
+    }
+
+    private fun pickupServingToSend(
+        isDelivery: Boolean,
+        pickupServingChoiceEnabled: Boolean,
+        selectedPickupServing: PickupServing,
+    ): PickupServing? =
+        if (isDelivery) {
+            null
+        } else {
+            if (pickupServingChoiceEnabled) {
+                selectedPickupServing
+            } else {
+                null
+            }
+        }
+
+    private fun changePickupServing(pickupServing: PickupServing) {
+        setState {
+            copy(
+                selectedPickupServing = pickupServing,
+                isPickupServingListShown = false,
+            )
+        }
+    }
+
     private fun changeWithoutChangeChecked() {
         setState {
             copy(withoutChangeChecked = !withoutChangeChecked)
@@ -531,6 +584,7 @@ class CreateOrderViewModel(
                                     .orEmpty(),
                         ),
                 )
+                val pickupServingChoiceEnabled = state.selectedCafe?.pickupServingChoiceEnabled == true
                 val orderCode =
                     createOrder(
                         isDelivery = state.isDelivery,
@@ -567,6 +621,13 @@ class CreateOrderViewModel(
                             },
                         timeZone = getSelectedCityTimeZone(),
                         paymentMethod = state.selectedPaymentMethod.name.name,
+                        pickupServing =
+                            pickupServingToSend(
+                                isDelivery = state.isDelivery,
+                                pickupServingChoiceEnabled = pickupServingChoiceEnabled,
+                                selectedPickupServing = state.selectedPickupServing,
+                            ),
+                        pickupServingChoiceEnabled = pickupServingChoiceEnabled,
                     )
                 if (orderCode == null) {
                     sendOrderCreateFailEvent(error = "null_order")
