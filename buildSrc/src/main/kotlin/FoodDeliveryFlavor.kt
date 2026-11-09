@@ -69,6 +69,10 @@ enum class FoodDeliveryFlavor(
     MOROSHKA(
         key = "moroshka",
         applicationId = "com.bunbeauty.moroshka"
+    ),
+    URBAN_VIBE(
+        key = "urbanvibe",
+        applicationId = "com.bunbeauty.urbanvibe"
     );
 
     val assembleReleaseBundle: String
