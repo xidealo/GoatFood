@@ -39,7 +39,7 @@ import com.bunbeauty.shared.data.network.model.order.get.LightOrderServer
 import com.bunbeauty.shared.data.network.model.order.get.OrderCodeServer
 import com.bunbeauty.shared.data.network.model.order.get.OrderServer
 import com.bunbeauty.shared.data.network.model.order.get.OrderUpdateServer
-import com.bunbeauty.shared.data.network.model.order.post.OrderV6PostServer
+import com.bunbeauty.shared.data.network.model.order.post.OrderV7PostServer
 import com.bunbeauty.shared.data.network.model.profile.get.ProfileServer
 import com.bunbeauty.shared.data.network.model.profile.patch.PatchUserServer
 import com.bunbeauty.shared.data.network.socket.SocketService
@@ -247,10 +247,10 @@ internal class NetworkConnectorImpl(
 
     override suspend fun postOrder(
         token: String,
-        order: OrderV6PostServer,
+        order: OrderV7PostServer,
     ): ApiResult<OrderCodeServer> =
         postData(
-            path = "v6/order",
+            path = "v7/order",
             body = order,
             token = token,
         )
