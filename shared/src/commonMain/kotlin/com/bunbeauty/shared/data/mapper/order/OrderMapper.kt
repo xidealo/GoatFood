@@ -13,10 +13,11 @@ import com.bunbeauty.shared.data.mapper.order_product.IOrderProductMapper
 import com.bunbeauty.shared.data.network.model.order.get.LightOrderServer
 import com.bunbeauty.shared.data.network.model.order.get.OrderServer
 import com.bunbeauty.shared.data.network.model.order.post.OrderAddressPostServer
-import com.bunbeauty.shared.data.network.model.order.post.OrderV6PostServer
+import com.bunbeauty.shared.data.network.model.order.post.OrderV7PostServer
 import com.bunbeauty.shared.db.LightOrderEntity
 import com.bunbeauty.shared.db.OrderEntity
 import com.bunbeauty.shared.db.OrderWithProductEntity
+import com.bunbeauty.shared.orderPlatform
 
 class OrderMapper(
     private val orderProductMapper: IOrderProductMapper,
@@ -188,8 +189,8 @@ class OrderMapper(
             pickupServing = orderServer.pickupServing.toPickupServing()?.name,
         )
 
-    override fun toOrderPostServer(createdOrder: CreatedOrder): OrderV6PostServer =
-        OrderV6PostServer(
+    override fun toOrderPostServer(createdOrder: CreatedOrder): OrderV7PostServer =
+        OrderV7PostServer(
             isDelivery = createdOrder.isDelivery,
             address =
                 OrderAddressPostServer(
@@ -207,6 +208,7 @@ class OrderMapper(
             orderProducts = createdOrder.orderProducts.map(orderProductMapper::toPostServerModel),
             paymentMethod = createdOrder.paymentMethod,
             pickupServing = createdOrder.pickupServing?.name,
+            platform = orderPlatform,
         )
 }
 

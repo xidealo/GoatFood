@@ -162,6 +162,7 @@ string|msg_order_details_discount|0KHQutC40LTQutCw
 string|msg_order_details_order_cost|0KHRg9C80LzQsCDQt9Cw0LrQsNC30LA=
 string|msg_order_details_payment_method|0KHQv9C+0YHQvtCxINC+0L/Qu9Cw0YLRiw==
 string|msg_order_details_pickup_method|0KHQv9C+0YHQvtCxINC/0L7Qu9GD0YfQtdC90LjRjw==
+string|msg_order_details_serving|0JLRi9C00LDRh9Cw
 string|msg_order_list_empty|0JfQtNC10YHRjCDQsdGD0LTRg9GCINC+0YLQvtCx0YDQsNC20LDRgtGM0YHRjyDQstCw0YjQuCDQt9Cw0LrQsNC30Ys=
 string|msg_payment_card_number|0J/QtdGA0LXQstC+0LTQvtC8INC/0L4g0L3QvtC80LXRgNGDINC60LDRgNGC0Ys=
 string|msg_payment_card|0JrQsNGA0YLQvtC5INC/0YDQuCDQv9C+0LvRg9GH0LXQvdC40Lg=
@@ -188,6 +189,9 @@ string|msg_without_utensils|0JHQtdC3INC/0YDQuNCx0L7RgNC+0LI=
 string|part_ruble|wqDigr0=
 string|payment_method|0KHQv9C+0YHQvtCxINC+0L/Qu9Cw0YLRiw==
 string|pickup_address|0JDQtNGA0LXRgSDRgdCw0LzQvtCy0YvQstC+0LfQsA==
+string|pickup_serving_bag|0JIg0L/QsNC60LXRgtC1
+string|pickup_serving_tray|0J3QsCDQv9C+0LTQvdC+0YHQtQ==
+string|pickup_serving|0KHQv9C+0YHQvtCxINC/0L7Qu9GD0YfQtdC90LjRjw==
 string|pickup_time|0JLRgNC10LzRjyDRgdCw0LzQvtCy0YvQstC+0LfQsA==
 string|preview_string|cHJldmlld19zdHJpbmc=
 string|title_about_app|0J4g0L/RgNC40LvQvtC20LXQvdC40Lg=

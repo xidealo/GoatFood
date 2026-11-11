@@ -2,10 +2,9 @@
 //  Version.xcconfig
 //  iosApp
 //
-//  Created by Марк Шавловский on 25.08.2024.
-//  Copyright © 2024 orgName. All rights reserved.
+//  Generated from version.properties — do not edit by hand.
+//  Run: ./gradlew syncIosVersion
 //
 
-APP_VERSION = 3.1.7
-APP_BUILD = 317
-
+APP_VERSION = 3.1.9
+APP_BUILD = 319
