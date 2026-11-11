@@ -223,7 +223,31 @@ platform :ios do
     ["iosApp/Version.xcconfig", "../iosApp/Version.xcconfig"].find { |path| File.exist?(path) }
   end
 
+  # Root version.properties is the shared Android+iOS baseline SoT.
+  def version_properties_path
+    [
+      "version.properties",
+      "../version.properties",
+      "../../version.properties"
+    ].find { |path| File.exist?(path) }
+  end
+
+  def read_version_properties
+    path = version_properties_path
+    return nil unless path
+
+    props = {}
+    File.foreach(path) do |line|
+      next if line.strip.empty? || line.lstrip.start_with?("#")
+      key, value = line.split("=", 2)
+      next if key.nil? || value.nil?
+      props[key.strip] = value.strip
+    end
+    props
+  end
+
   # CFBundleVersion берётся из ${APP_BUILD} в Version.xcconfig, не из agvtool/CURRENT_PROJECT_VERSION.
+  # Пишет только runner-копию xcconfig для ASC uniqueness; version.properties не трогает.
   def set_app_build_number(build_number)
     path = version_xcconfig_path
     UI.user_error!("Не найден Version.xcconfig (cwd: #{Dir.pwd})") unless path
@@ -237,7 +261,11 @@ platform :ios do
     UI.message("APP_BUILD = #{build_number} (#{path})")
   end
 
-  def current_xcconfig_build_number
+  def baseline_app_build_number
+    props = read_version_properties
+    code = props && props["versionCode"].to_s
+    return code.to_i if code =~ /\A\d+\z/
+
     path = version_xcconfig_path
     return 0 unless path
 
@@ -245,8 +273,18 @@ platform :ios do
   end
 
   def current_xcconfig_app_version
+    props = read_version_properties
+    if props
+      major = props["versionMajor"]
+      minor = props["versionMinor"]
+      patch = props["versionPatch"]
+      if major && minor && patch
+        return "#{major}.#{minor}.#{patch}"
+      end
+    end
+
     path = version_xcconfig_path
-    UI.user_error!("Не найден Version.xcconfig (cwd: #{Dir.pwd})") unless path
+    UI.user_error!("Не найден version.properties или Version.xcconfig (cwd: #{Dir.pwd})") unless path
 
     version = File.read(path)[/^APP_VERSION\s*=\s*(.+)\s*$/, 1]&.strip
     UI.user_error!("Не найдена строка APP_VERSION в #{path}") if version.to_s.empty?
@@ -254,12 +292,12 @@ platform :ios do
     version
   end
 
-  # Следующий build number: max(последний в ASC, APP_BUILD в xcconfig) + 1
+  # Следующий build number: max(последний в ASC, baseline versionCode) + 1
   def next_app_store_build_number(app_identifier)
     latest = latest_testflight_build_number(app_identifier: app_identifier).to_i
     next_number = latest + 1
-    xcconfig_build = current_xcconfig_build_number
-    next_number = [next_number, xcconfig_build + 1].max if xcconfig_build.positive?
+    baseline_build = baseline_app_build_number
+    next_number = [next_number, baseline_build + 1].max if baseline_build.positive?
     next_number
   end
 

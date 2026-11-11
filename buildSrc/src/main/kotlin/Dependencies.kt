@@ -1,15 +1,25 @@
+import java.io.File
+
 object Namespace {
     const val app = "com.bunbeauty.papakarlo"
     const val shared = "com.bunbeauty.shared"
 }
 
 object CommonApplication {
-    private const val versionMajor = 3
-    private const val versionMinor = 1
-    private const val versionPatch = 7
+    private val versionProperties by lazy {
+        var dir = File(System.getProperty("user.dir") ?: ".").canonicalFile
+        repeat(8) {
+            val candidate = File(dir, "version.properties")
+            if (candidate.isFile) {
+                return@lazy AppVersion.loadProperties(candidate)
+            }
+            dir = dir.parentFile ?: return@repeat
+        }
+        error("version.properties not found walking up from ${System.getProperty("user.dir")}")
+    }
 
-    const val versionCode = 317
-    const val versionName = "$versionMajor.$versionMinor.$versionPatch"
+    val versionCode: Int get() = AppVersion.versionCode(versionProperties)
+    val versionName: String get() = AppVersion.versionName(versionProperties)
 
     const val deploymentTarget = "15.5"
 }
