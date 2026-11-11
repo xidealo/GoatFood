@@ -6,5 +6,5 @@
 //  Run: ./gradlew syncIosVersion
 //
 
-APP_VERSION = 3.1.7
-APP_BUILD = 317
+APP_VERSION = 3.1.9
+APP_BUILD = 319
