@@ -113,7 +113,7 @@ When the user asks to create a new release:
 
 ### 1) Determine the next version
 
-Version is defined in `buildSrc/src/main/kotlin/Dependencies.kt` with:
+Version is defined in root `version.properties` (single source of truth for Android + iOS) with:
 - `versionMajor`
 - `versionMinor`
 - `versionPatch`
@@ -129,8 +129,9 @@ Rules:
 
 - Create a branch from `develop`:
   - `feature/release-<new-version>` (or another `feature/...` name consistent with rules)
-- Update `Dependencies.kt` version fields.
-- Commit with message describing the release bump (e.g. `Bump version to X.Y.Z`).
+- Update `version.properties` version fields.
+- Run `./gradlew syncIosVersion` to refresh `iosApp/iosApp/Version.xcconfig`.
+- Commit both files with message describing the release bump (e.g. `Bump version to X.Y.Z`).
 - Push the branch.
 
 ### 3) Create Release PR develop → master

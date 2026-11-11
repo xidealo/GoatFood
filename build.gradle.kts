@@ -24,6 +24,51 @@ allprojects {
     }
 }
 
+val versionPropertiesPath = layout.projectDirectory.file("version.properties")
+val iosVersionXcconfigPath = layout.projectDirectory.file("iosApp/iosApp/Version.xcconfig")
+
+val syncIosVersion by tasks.registering {
+    group = "versioning"
+    description = "Writes iosApp/iosApp/Version.xcconfig from root version.properties"
+    val propsFile = versionPropertiesPath
+    val xcconfigFile = iosVersionXcconfigPath
+    inputs.file(propsFile)
+    outputs.file(xcconfigFile)
+    doLast {
+        val out = xcconfigFile.asFile
+        out.writeText(AppVersion.iosVersionXcconfigContent(propsFile.asFile))
+        logger.lifecycle("Updated ${out.path}")
+    }
+}
+
+val checkIosVersionSync by tasks.registering {
+    group = "verification"
+    description = "Fails if Version.xcconfig does not match version.properties"
+    val propsFile = versionPropertiesPath
+    val xcconfigFile = iosVersionXcconfigPath
+    inputs.file(propsFile)
+    inputs.file(xcconfigFile)
+    mustRunAfter(syncIosVersion)
+    doLast {
+        val expected = AppVersion.iosVersionXcconfigContent(propsFile.asFile)
+        val actual = xcconfigFile.asFile.readText()
+        if (actual != expected) {
+            throw GradleException(
+                "iosApp/iosApp/Version.xcconfig is out of sync with version.properties. " +
+                    "Run ./gradlew syncIosVersion",
+            )
+        }
+    }
+}
+
+subprojects {
+    plugins.withId("com.android.application") {
+        tasks.named("check").configure {
+            dependsOn(checkIosVersionSync)
+        }
+    }
+}
+
 // Xcode 27+ rejects IPHONEOS_DEPLOYMENT_TARGET below 15.0. The Kotlin CocoaPods plugin
 // raises pod targets in the generated synthetic projects only to 12.0, and Firebase
 // transitive podspecs (GoogleUtilities, nanopb, Promises) still declare 9.0-12.0, so
