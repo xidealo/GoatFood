@@ -53,11 +53,13 @@ jobs:
           RELEASE_STORE_PASSWORD: ${{ secrets.RELEASE_STORE_PASSWORD }}
           RELEASE_KEY_ALIAS: ${{ secrets.RELEASE_KEY_ALIAS }}
           RELEASE_KEY_PASSWORD: ${{ secrets.RELEASE_KEY_PASSWORD }}
+          APP_METRICA_API_KEY: ${{ secrets.APP_METRICA_API_KEY }}
         run: |
           echo -e "RELEASE_STORE_FILE=$RELEASE_STORE_FILE" > local.properties
           echo -e "RELEASE_STORE_PASSWORD=$RELEASE_STORE_PASSWORD" >> local.properties
           echo -e "RELEASE_KEY_ALIAS=$RELEASE_KEY_ALIAS" >> local.properties
           echo -e "RELEASE_KEY_PASSWORD=$RELEASE_KEY_PASSWORD" >> local.properties
+          echo -e "APP_METRICA_API_KEY=$APP_METRICA_API_KEY" >> local.properties
       - name: "Upload local.properties"
         uses: actions/upload-artifact@v4
         with:
