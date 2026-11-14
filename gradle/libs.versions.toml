@@ -22,6 +22,7 @@ lifecycle = "2.11.0"
 kotlinxDateTime = "0.8.0"
 leakcanary = "2.14"
 firebase = "34.17.0"
+appmetrica = "8.6.0"
 kaspresso = "1.6.1"
 collectionsImmutable = "0.5.1"
 ktLint = "14.2.0"
@@ -55,6 +56,7 @@ desugar-jdk-libs = { module = "com.android.tools:desugar_jdk_libs", version.ref 
 firebase-bom = { module = "com.google.firebase:firebase-bom", version.ref = "firebase" }
 firebase-crashlytics = { module = "com.google.firebase:firebase-crashlytics" }
 firebase-analytics = { module = "com.google.firebase:firebase-analytics" }
+appmetrica-analytics = { module = "io.appmetrica.analytics:analytics", version.ref = "appmetrica" }
 firebase-messaging = { module = "com.google.firebase:firebase-messaging" }
 compose-bom = { module = "androidx.compose:compose-bom", version.ref = "composeBom" }
 foundation = { module = "androidx.compose.foundation:foundation" }
