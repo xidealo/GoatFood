@@ -8,6 +8,7 @@ install! 'cocoapods'
 def default_pods
   pod 'Firebase','11.12.0'
   pod 'FirebaseCrashlytics','11.12.0'
+  pod 'AppMetricaAnalytics', '~> 7.0.0'
   pod 'Kingfisher'
   pod 'shared', :path => '../shared'
 end
@@ -85,6 +86,18 @@ end
 # Gradle fills the directory later in [CP-User] Build shared. post_install injects a copy
 # into each app's Pods-*-resources.sh so xcodebuild copies the filled folder into the .app.
 post_install do |installer|
+  # AppMetricaCore is linked statically and does not set -ObjC itself.
+  # Without it, AppMetrica categories are stripped and activation crashes.
+  installer.aggregate_targets.each do |aggregate_target|
+    aggregate_target.xcconfigs.each do |config_name, xcconfig|
+      flags = xcconfig.attributes['OTHER_LDFLAGS'] || '$(inherited)'
+      next if flags.include?('-ObjC')
+
+      xcconfig.attributes['OTHER_LDFLAGS'] = "#{flags} -ObjC"
+      xcconfig.save_as(aggregate_target.xcconfig_path(config_name))
+    end
+  end
+
   installer.pods_project.targets.each do |target|
     target.build_configurations.each do |config|
       config.build_settings['EXCLUDED_ARCHS[sdk=iphonesimulator*]'] = 'x86_64'
