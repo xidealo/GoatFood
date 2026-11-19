@@ -38,7 +38,7 @@ interface NetworkConnector {
 
     suspend fun getCategoryList(): ApiResult<ListServer<CategoryServer>>
 
-    suspend fun getMenuProductList(): ApiResult<ListServer<MenuProductServer>>
+    suspend fun getMenuProductListByCafe(cafeUuid: String): ApiResult<ListServer<MenuProductServer>>
 
     suspend fun getCityList(): ApiResult<ListServer<CityServer>>
 

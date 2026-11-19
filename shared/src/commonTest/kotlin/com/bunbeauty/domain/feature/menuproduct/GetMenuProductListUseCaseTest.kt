@@ -1,10 +1,12 @@
 package com.bunbeauty.domain.feature.menuproduct
 
+import com.bunbeauty.core.domain.cafe.GetSelectedCafeUseCase
 import com.bunbeauty.core.domain.menu_product.GetMenuProductListUseCaseImpl
 import com.bunbeauty.core.domain.repo.MenuProductRepo
 import com.bunbeauty.core.model.addition.AdditionGroup
 import com.bunbeauty.core.model.category.Category
 import com.bunbeauty.core.model.product.MenuProduct
+import com.bunbeauty.getCafe
 import dev.mokkery.answering.returns
 import dev.mokkery.everySuspend
 import dev.mokkery.mock
@@ -14,14 +16,17 @@ import kotlin.test.assertEquals
 
 class GetMenuProductListUseCaseTest {
     private val menuProductRepo: MenuProductRepo = mock()
+    private val getSelectedCafeUseCase: GetSelectedCafeUseCase = mock()
+    private val cafeUuid = "cafeUuid"
 
     private var getMenuProductListUseCase: GetMenuProductListUseCaseImpl =
         GetMenuProductListUseCaseImpl(
             menuProductRepo = menuProductRepo,
+            getSelectedCafeUseCase = getSelectedCafeUseCase,
         )
 
     @Test
-    fun `return only visible menu products`() =
+    fun `return only visible menu products for selected cafe`() =
         runTest {
             val menuProduct1 = getFakeMenuProduct(uuid = "1", visible = true)
             val menuProduct2 = getFakeMenuProduct(uuid = "2", visible = false)
@@ -32,7 +37,8 @@ class GetMenuProductListUseCaseTest {
                     menuProduct2,
                     menuProduct3,
                 )
-            everySuspend { menuProductRepo.getMenuProductList() } returns initialList
+            everySuspend { getSelectedCafeUseCase() } returns getCafe(cafeUuid)
+            everySuspend { menuProductRepo.getMenuProductList(cafeUuid) } returns initialList
             val expectedList =
                 listOf(
                     menuProduct1,
@@ -78,7 +84,8 @@ class GetMenuProductListUseCaseTest {
                     menuProduct1,
                     menuProduct2,
                 )
-            everySuspend { menuProductRepo.getMenuProductList() } returns initialList
+            everySuspend { getSelectedCafeUseCase() } returns getCafe(cafeUuid)
+            everySuspend { menuProductRepo.getMenuProductList(cafeUuid) } returns initialList
 
             val updatedMenuProduct1 =
                 getFakeMenuProduct(

@@ -16,7 +16,6 @@ import com.bunbeauty.shared.data.network.model.MenuProductServer
 import com.bunbeauty.shared.domain.mapFlow
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
-import kotlin.collections.map
 
 class MenuProductRepository(
     private val networkConnector: NetworkConnector,
@@ -30,22 +29,39 @@ class MenuProductRepository(
     MenuProductRepo {
     override val tag: String = "MENU_PRODUCT_TAG"
 
-    override suspend fun getMenuProductList(): List<MenuProduct> =
-        getCacheOrListData(
-            onApiRequest = networkConnector::getMenuProductList,
-            onLocalRequest = {
-                menuProductMapper
-                    .toMenuProductList(
-                        menuProductDao.getMenuProductWithCategoryList(),
-                    ).map { menuProduct ->
-                        menuProduct.copy(
-                            additionGroups = getAdditionGroups(menuProduct),
-                        )
-                    }
-            },
+    private var cachedCafeUuid: String? = null
+
+    override suspend fun getMenuProductList(cafeUuid: String): List<MenuProduct> {
+        val cacheData = cache
+        if (cacheData != null && cachedCafeUuid == cafeUuid) {
+            return cacheData
+        }
+        if (cachedCafeUuid != cafeUuid) {
+            cache = null
+            cachedCafeUuid = null
+        }
+        return getCacheOrListData(
+            isCacheValid = { cachedCafeUuid == cafeUuid },
+            onApiRequest = { networkConnector.getMenuProductListByCafe(cafeUuid) },
+            onLocalRequest = ::loadMenuProductListLocally,
             onSaveLocally = ::saveMenuLocally,
             serverToDomainModel = menuProductMapper::toMenuProduct,
-        )
+        ).also {
+            if (cache != null) {
+                cachedCafeUuid = cafeUuid
+            }
+        }
+    }
+
+    private suspend fun loadMenuProductListLocally(): List<MenuProduct> =
+        menuProductMapper
+            .toMenuProductList(
+                menuProductDao.getMenuProductWithCategoryList(),
+            ).map { menuProduct ->
+                menuProduct.copy(
+                    additionGroups = getAdditionGroups(menuProduct),
+                )
+            }
 
     private suspend fun getAdditionGroups(menuProduct: MenuProduct) =
         additionGroupDao
@@ -68,22 +84,18 @@ class MenuProductRepository(
             .observeMenuProductByUuid(menuProductUuid)
             .mapFlow(menuProductMapper::toMenuProduct)
 
-    override suspend fun getMenuProductByUuid(menuProductUuid: String): MenuProduct? =
-        getCacheOrListData(
-            onApiRequest = networkConnector::getMenuProductList,
-            onLocalRequest = {
-                menuProductMapper
-                    .toMenuProductList(
-                        menuProductDao.getMenuProductWithCategoryList(),
-                    ).map { menuProduct ->
-                        menuProduct.copy(
-                            additionGroups = getAdditionGroups(menuProduct),
-                        )
-                    } as List<MenuProduct>
-            },
-            onSaveLocally = ::saveMenuLocally,
-            serverToDomainModel = menuProductMapper::toMenuProduct,
-        ).find { menuProduct -> menuProduct.uuid == menuProductUuid }
+    override suspend fun getMenuProductByUuid(
+        menuProductUuid: String,
+        cafeUuid: String,
+    ): MenuProduct? =
+        getMenuProductList(cafeUuid = cafeUuid).find { menuProduct ->
+            menuProduct.uuid == menuProductUuid
+        }
+
+    override fun clearCache() {
+        cache = null
+        cachedCafeUuid = null
+    }
 
     private suspend fun getAdditions(additionGroup: AdditionGroup) =
         additionDao
