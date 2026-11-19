@@ -2,12 +2,13 @@ package com.bunbeauty.domain.feature.cafe
 
 import com.bunbeauty.core.domain.cafe.GetCafeListUseCase
 import com.bunbeauty.core.domain.cafe.GetSelectableCafeListUseCase
+import com.bunbeauty.core.domain.cafe.GetSelectedCafeUseCase
 import com.bunbeauty.core.domain.cafe.IsPickupEnabledFromCafeUseCase
 import com.bunbeauty.core.domain.exeptions.EmptyCafeListException
-import com.bunbeauty.core.domain.repo.CafeRepo
 import com.bunbeauty.core.model.cafe.SelectableCafe
 import com.bunbeauty.getCafe
 import dev.mokkery.answering.returns
+import dev.mokkery.answering.throws
 import dev.mokkery.everySuspend
 import dev.mokkery.mock
 import kotlinx.coroutines.test.runTest
@@ -16,14 +17,14 @@ import kotlin.test.assertEquals
 import kotlin.test.assertFailsWith
 
 class GetSelectableCafeListUseCaseTest {
-    private val cafeRepo: CafeRepo = mock()
     private val getCafeListUseCase: GetCafeListUseCase = mock()
+    private val getSelectedCafeUseCase: GetSelectedCafeUseCase = mock()
     private var isPickupEnabledFromCafeUseCase: IsPickupEnabledFromCafeUseCase = mock()
 
     private val getSelectableCafeListUseCase: GetSelectableCafeListUseCase =
         GetSelectableCafeListUseCase(
-            cafeRepo = cafeRepo,
             getCafeListUseCase = getCafeListUseCase,
+            getSelectedCafeUseCase = getSelectedCafeUseCase,
             isPickupEnabledFromCafeUseCaseImpl = isPickupEnabledFromCafeUseCase,
         )
 
@@ -31,7 +32,7 @@ class GetSelectableCafeListUseCaseTest {
     fun `invoke should throw EmptyCafeListException when cafe list is empty`() =
         runTest {
             // Arrange
-            everySuspend { getCafeListUseCase() } returns emptyList()
+            everySuspend { getSelectedCafeUseCase() } throws EmptyCafeListException()
 
             // Act & Assert
             assertFailsWith<EmptyCafeListException> {
@@ -43,8 +44,6 @@ class GetSelectableCafeListUseCaseTest {
     fun `invoke should return sorted list with selected cafe when user has selected cafe`() =
         runTest {
             // Arrange
-            val cityUuid = "city1"
-            val userUuid = "user1"
             val cafes =
                 listOf(
                     getCafe("cafe1"),
@@ -54,9 +53,7 @@ class GetSelectableCafeListUseCaseTest {
             val selectedCafe = cafes[1]
 
             everySuspend { getCafeListUseCase() } returns cafes
-            everySuspend {
-                cafeRepo.getSelectedCafeByUserAndCityUuid()
-            } returns selectedCafe
+            everySuspend { getSelectedCafeUseCase() } returns selectedCafe
             everySuspend { isPickupEnabledFromCafeUseCase("cafe1") } returns true
             everySuspend { isPickupEnabledFromCafeUseCase("cafe2") } returns false
             everySuspend { isPickupEnabledFromCafeUseCase("cafe3") } returns true
@@ -79,19 +76,16 @@ class GetSelectableCafeListUseCaseTest {
     fun `invoke should return list with first pickup-enabled cafe selected when no user selection`() =
         runTest {
             // Arrange
-            val cityUuid = "city1"
-            val userUuid = "user1"
             val cafes =
                 listOf(
                     getCafe("cafe1"),
                     getCafe("cafe2"),
                     getCafe("cafe3"),
                 )
+            val selectedCafe = cafes[1]
 
             everySuspend { getCafeListUseCase() } returns cafes
-            everySuspend {
-                cafeRepo.getSelectedCafeByUserAndCityUuid()
-            } returns null
+            everySuspend { getSelectedCafeUseCase() } returns selectedCafe
             everySuspend { isPickupEnabledFromCafeUseCase("cafe1") } returns false
             everySuspend { isPickupEnabledFromCafeUseCase("cafe2") } returns true
             everySuspend { isPickupEnabledFromCafeUseCase("cafe3") } returns true
@@ -119,11 +113,10 @@ class GetSelectableCafeListUseCaseTest {
                     getCafe("cafe1"),
                     getCafe("cafe2"),
                 )
+            val selectedCafe = cafes[0]
 
             everySuspend { getCafeListUseCase() } returns cafes
-            everySuspend {
-                cafeRepo.getSelectedCafeByUserAndCityUuid()
-            } returns null
+            everySuspend { getSelectedCafeUseCase() } returns selectedCafe
             everySuspend { isPickupEnabledFromCafeUseCase("cafe1") } returns false
             everySuspend { isPickupEnabledFromCafeUseCase("cafe2") } returns false
 

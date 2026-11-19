@@ -27,8 +27,10 @@ enum AppBootstrap {
         }
         #if DEBUG
         Analytics.setAnalyticsCollectionEnabled(false)
+        AppMetricaActivationKt.activateAppMetrica(dataSendingEnabled: false)
         #else
         Analytics.setAnalyticsCollectionEnabled(true)
+        AppMetricaActivationKt.activateAppMetrica(dataSendingEnabled: true)
         #endif
         KoinKt.doInitKoin()
     }

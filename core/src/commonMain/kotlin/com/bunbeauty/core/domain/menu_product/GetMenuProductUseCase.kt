@@ -1,14 +1,21 @@
 package com.bunbeauty.core.domain.menu_product
 
+import com.bunbeauty.core.domain.cafe.GetSelectedCafeUseCase
+import com.bunbeauty.core.domain.repo.MenuProductRepo
 import com.bunbeauty.core.model.addition.AdditionGroup
 import com.bunbeauty.core.model.product.MenuProduct
-import com.bunbeauty.core.domain.repo.MenuProductRepo
 
 class GetMenuProductUseCase(
     private val menuProductRepo: MenuProductRepo,
+    private val getSelectedCafeUseCase: GetSelectedCafeUseCase,
 ) {
     suspend operator fun invoke(menuProductUuid: String): MenuProduct? {
-        val menuProduct = menuProductRepo.getMenuProductByUuid(menuProductUuid)
+        val cafeUuid = getSelectedCafeUseCase().uuid
+        val menuProduct =
+            menuProductRepo.getMenuProductByUuid(
+                menuProductUuid = menuProductUuid,
+                cafeUuid = cafeUuid,
+            )
 
         return menuProduct?.copy(
             additionGroups = getAdditionGroupList(menuProduct),

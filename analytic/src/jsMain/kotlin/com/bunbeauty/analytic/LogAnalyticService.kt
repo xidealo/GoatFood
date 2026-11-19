@@ -5,8 +5,8 @@ import com.bunbeauty.analytic.event.toMap
 import com.bunbeauty.core.Logger
 import com.bunbeauty.core.Logger.ANALYTIC_TAG
 
-actual class AnalyticService {
-    actual fun sendEvent(event: FoodDeliveryEvent) {
+class LogAnalyticService : AnalyticService {
+    override fun sendEvent(event: FoodDeliveryEvent) {
         val name = "web_${event.category}_${event.action}"
         Logger.logD(ANALYTIC_TAG, "send event: $name with params ${event.params.toMap()}")
     }
