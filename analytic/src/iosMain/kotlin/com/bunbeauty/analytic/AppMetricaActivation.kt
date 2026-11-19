@@ -21,7 +21,7 @@ fun activateAppMetrica(dataSendingEnabled: Boolean) {
 
 private fun appMetricaConfiguration(): AMAAppMetricaConfiguration? {
     if (isAppMetricaApiKeyConfigured()) {
-        return AMAAppMetricaConfiguration(APIKey = APP_METRICA_API_KEY)
+        return AMAAppMetricaConfiguration(aPIKey = APP_METRICA_API_KEY)
     }
     return null
 }
