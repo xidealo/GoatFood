@@ -3,6 +3,7 @@ package com.bunbeauty.shared.data.network.api
 import com.bunbeauty.core.ApiError
 import com.bunbeauty.core.ApiResult
 import com.bunbeauty.core.Constants.AUTHORIZATION_HEADER
+import com.bunbeauty.core.Constants.CAFE_UUID_PARAMETER
 import com.bunbeauty.core.Constants.CITY_UUID_PARAMETER
 import com.bunbeauty.core.Constants.COMPANY_UUID_PARAMETER
 import com.bunbeauty.core.Constants.QUERY_PARAMETER
@@ -87,10 +88,14 @@ internal class NetworkConnectorImpl(
             parameters = mapOf(COMPANY_UUID_PARAMETER to companyUuidProvider.companyUuid),
         )
 
-    override suspend fun getMenuProductList(): ApiResult<ListServer<MenuProductServer>> =
+    override suspend fun getMenuProductListByCafe(cafeUuid: String): ApiResult<ListServer<MenuProductServer>> =
         getData(
-            path = "menu_product",
-            parameters = mapOf(COMPANY_UUID_PARAMETER to companyUuidProvider.companyUuid),
+            path = "v2/menu_product",
+            parameters =
+                mapOf(
+                    COMPANY_UUID_PARAMETER to companyUuidProvider.companyUuid,
+                    CAFE_UUID_PARAMETER to cafeUuid,
+                ),
         )
 
     override suspend fun getCityList(): ApiResult<ListServer<CityServer>> =

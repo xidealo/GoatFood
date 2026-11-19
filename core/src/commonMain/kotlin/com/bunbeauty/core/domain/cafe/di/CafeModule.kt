@@ -5,6 +5,8 @@ import com.bunbeauty.core.domain.cafe.GetCafeListUseCase
 import com.bunbeauty.core.domain.cafe.GetCafeListUseCaseImpl
 import com.bunbeauty.core.domain.cafe.GetDeferredTimeHintUseCase
 import com.bunbeauty.core.domain.cafe.GetSelectableCafeListUseCase
+import com.bunbeauty.core.domain.cafe.GetSelectedCafeUseCase
+import com.bunbeauty.core.domain.cafe.GetSelectedCafeUseCaseImpl
 import com.bunbeauty.core.domain.cafe.GetWorkloadCafeUseCase
 import com.bunbeauty.core.domain.cafe.HasOpenedCafeUseCase
 import com.bunbeauty.core.domain.cafe.IsDeliveryEnabledFromCafeUseCase
@@ -20,10 +22,17 @@ fun cafeModule() =
                 cafeRepo = get(),
             )
         }
-        factory {
-            GetSelectableCafeListUseCase(
+        factory<GetSelectedCafeUseCase> {
+            GetSelectedCafeUseCaseImpl(
                 cafeRepo = get(),
                 getCafeListUseCase = get(),
+                isPickupEnabledFromCafeUseCase = get(),
+            )
+        }
+        factory {
+            GetSelectableCafeListUseCase(
+                getCafeListUseCase = get(),
+                getSelectedCafeUseCase = get(),
                 isPickupEnabledFromCafeUseCaseImpl = get(),
             )
         }

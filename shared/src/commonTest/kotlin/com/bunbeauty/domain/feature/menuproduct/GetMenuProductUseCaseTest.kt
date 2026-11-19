@@ -1,9 +1,11 @@
 package com.bunbeauty.domain.feature.menuproduct
 
+import com.bunbeauty.core.domain.cafe.GetSelectedCafeUseCase
 import com.bunbeauty.core.domain.menu_product.GetMenuProductUseCase
 import com.bunbeauty.core.domain.repo.MenuProductRepo
 import com.bunbeauty.getAddition
 import com.bunbeauty.getAdditionGroup
+import com.bunbeauty.getCafe
 import com.bunbeauty.getMenuProduct
 import dev.mokkery.answering.returns
 import dev.mokkery.everySuspend
@@ -14,11 +16,14 @@ import kotlin.test.assertEquals
 
 class GetMenuProductUseCaseTest {
     private val menuProductRepo: MenuProductRepo = mock()
+    private val getSelectedCafeUseCase: GetSelectedCafeUseCase = mock()
     private val menuProductUuid = "menuProductUuid"
+    private val cafeUuid = "cafeUuid"
 
     private val getMenuProductUseCase: GetMenuProductUseCase =
         GetMenuProductUseCase(
             menuProductRepo = menuProductRepo,
+            getSelectedCafeUseCase = getSelectedCafeUseCase,
         )
 
     @Test
@@ -48,7 +53,13 @@ class GetMenuProductUseCaseTest {
                         ),
                 )
 
-            everySuspend { menuProductRepo.getMenuProductByUuid(menuProductUuid) } returns initialMenuProduct
+            everySuspend { getSelectedCafeUseCase() } returns getCafe(cafeUuid)
+            everySuspend {
+                menuProductRepo.getMenuProductByUuid(
+                    menuProductUuid = menuProductUuid,
+                    cafeUuid = cafeUuid,
+                )
+            } returns initialMenuProduct
 
             // When
             val result = getMenuProductUseCase(menuProductUuid)
@@ -86,7 +97,13 @@ class GetMenuProductUseCaseTest {
                         ),
                 )
 
-            everySuspend { menuProductRepo.getMenuProductByUuid(menuProductUuid) } returns initialMenuProduct
+            everySuspend { getSelectedCafeUseCase() } returns getCafe(cafeUuid)
+            everySuspend {
+                menuProductRepo.getMenuProductByUuid(
+                    menuProductUuid = menuProductUuid,
+                    cafeUuid = cafeUuid,
+                )
+            } returns initialMenuProduct
 
             // When
             val result = getMenuProductUseCase(menuProductUuid)
@@ -138,7 +155,13 @@ class GetMenuProductUseCaseTest {
                     additionGroups = additionGroupsWithSortedAdditions,
                 )
 
-            everySuspend { menuProductRepo.getMenuProductByUuid(menuProductUuid) } returns initialMenuProduct
+            everySuspend { getSelectedCafeUseCase() } returns getCafe(cafeUuid)
+            everySuspend {
+                menuProductRepo.getMenuProductByUuid(
+                    menuProductUuid = menuProductUuid,
+                    cafeUuid = cafeUuid,
+                )
+            } returns initialMenuProduct
 
             // When
             val result = getMenuProductUseCase(menuProductUuid)
@@ -189,7 +212,13 @@ class GetMenuProductUseCaseTest {
                     additionGroups = additionGroupsWithFilttredAdditions,
                 )
 
-            everySuspend { menuProductRepo.getMenuProductByUuid(menuProductUuid) } returns initialMenuProduct
+            everySuspend { getSelectedCafeUseCase() } returns getCafe(cafeUuid)
+            everySuspend {
+                menuProductRepo.getMenuProductByUuid(
+                    menuProductUuid = menuProductUuid,
+                    cafeUuid = cafeUuid,
+                )
+            } returns initialMenuProduct
 
             // When
             val result = getMenuProductUseCase(menuProductUuid)

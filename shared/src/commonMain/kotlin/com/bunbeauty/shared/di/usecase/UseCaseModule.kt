@@ -88,11 +88,13 @@ internal fun useCaseModules() =
         factory {
             GetMenuProductUseCase(
                 menuProductRepo = get(),
+                getSelectedCafeUseCase = get(),
             )
         }
         factory<GetMenuProductListUseCase> {
             GetMenuProductListUseCaseImpl(
                 menuProductRepo = get(),
+                getSelectedCafeUseCase = get(),
             )
         }
         factory {

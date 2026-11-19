@@ -44,6 +44,7 @@ internal fun interactorModule() =
         single<ICafeInteractor> {
             CafeInteractor(
                 cafeRepo = get(),
+                menuProductRepo = get(),
             )
         }
         single<IMenuProductInteractor> {
