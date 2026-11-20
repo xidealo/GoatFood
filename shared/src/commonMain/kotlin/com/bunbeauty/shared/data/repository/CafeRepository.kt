@@ -1,7 +1,6 @@
 package com.bunbeauty.shared.data.repository
 
 import com.bunbeauty.core.domain.exeptions.NoSelectedCityUuidException
-import com.bunbeauty.core.domain.exeptions.NoUserUuidException
 import com.bunbeauty.core.domain.repo.CafeRepo
 import com.bunbeauty.core.extension.dataOrNull
 import com.bunbeauty.core.model.cafe.Cafe
@@ -82,9 +81,12 @@ class CafeRepository(
 
     override suspend fun getSelectedCafeByUserAndCityUuid(): Cafe? {
         val cityUuid = dataStoreRepo.getSelectedCityUuid() ?: throw NoSelectedCityUuidException()
-        val userUuid = dataStoreRepo.getUserUuid() ?: throw NoUserUuidException()
-
-        return cafeDao.getSelectedCafeByUserAndCityUuid(userUuid, cityUuid)?.toCafe()
+        val userUuid = dataStoreRepo.getUserUuid()
+        return if (userUuid != null) {
+            cafeDao.getSelectedCafeByUserAndCityUuid(userUuid, cityUuid)?.toCafe()
+        } else {
+            null
+        }
     }
 
     override fun clearCache() {
