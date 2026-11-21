@@ -26,6 +26,7 @@ fun profileFeatureModule() =
                 analyticService = get(),
                 settingsRepository = get(),
                 notificationSettingsHandler = get(),
+                updateEmailUseCase = get(),
             )
         }
     }

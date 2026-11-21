@@ -16,6 +16,8 @@ interface SettingsState {
         val isShowLogoutBottomSheet: Boolean = false,
         val isShowCityListBottomSheet: Boolean = false,
         val isShowDisableUserBottomSheet: Boolean = false,
+        val isShowEmailBottomSheet: Boolean = false,
+        val emailInput: String = "",
     ) : BaseDataState {
         enum class State {
             SUCCESS,
@@ -54,6 +56,16 @@ interface SettingsState {
         data object BackClick : Action
 
         data object CloseLogoutBottomSheet : Action
+
+        data object OnEmailClicked : Action
+
+        data object CloseEmailBottomSheet : Action
+
+        data object SaveEmail : Action
+
+        data class OnEmailChanged(
+            val value: String,
+        ) : Action
 
         data class OnMarketingNotificationsChanged(
             val enabled: Boolean,
