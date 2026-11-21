@@ -24,6 +24,9 @@ fun profileFeatureModule() =
                 disableUserUseCase = get(),
                 userInteractor = get(),
                 analyticService = get(),
+                settingsRepository = get(),
+                notificationSettingsHandler = get(),
+                updateEmailUseCase = get(),
             )
         }
     }

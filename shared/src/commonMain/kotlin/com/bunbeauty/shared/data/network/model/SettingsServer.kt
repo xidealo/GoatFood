@@ -13,4 +13,8 @@ data class SettingsServer(
     val email: String?,
     @SerialName("personalDiscountPercent")
     val personalDiscountPercent: Int? = null,
+    @SerialName("marketingNotificationsEnabled")
+    val marketingNotificationsEnabled: Boolean = true,
+    @SerialName("systemNotificationsEnabled")
+    val systemNotificationsEnabled: Boolean = false,
 )

@@ -1,10 +1,17 @@
 package com.bunbeauty.profile.ui.screen.settings
 
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.Switch
+import androidx.compose.material3.SwitchDefaults
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -37,7 +44,10 @@ import papakarlo.designsystem.generated.resources.error_common_data_loading
 import papakarlo.designsystem.generated.resources.error_something_went_wrong
 import papakarlo.designsystem.generated.resources.hint_settings_phone
 import papakarlo.designsystem.generated.resources.msg_settings_email_updated
+import papakarlo.designsystem.generated.resources.msg_settings_marketing_notifications
 import papakarlo.designsystem.generated.resources.title_settings
+import papakarlo.designsystem.generated.resources.title_settings_email
+import papakarlo.designsystem.generated.resources.title_settings_marketing_notifications
 
 @Composable
 fun SettingsRoute(
@@ -83,6 +93,10 @@ fun SettingsState.DataState.mapState(): SettingsViewState =
     SettingsViewState(
         phoneNumber = settings?.phoneNumber.orEmpty(),
         selectedCityName = selectedCity?.name.orEmpty(),
+        email = settings?.email.orEmpty(),
+        emailInput = emailInput,
+        isShowEmailBottomSheet = isShowEmailBottomSheet,
+        marketingNotificationsEnabled = settings?.marketingNotificationsEnabled ?: true,
         state =
             when (state) {
                 SettingsState.DataState.State.SUCCESS -> {
@@ -142,6 +156,10 @@ fun SettingsEffect(
                     showErrorMessage(getString(Res.string.error_something_went_wrong))
                 }
 
+                SettingsState.Event.ShowNotificationSettingsFailedEvent -> {
+                    showErrorMessage(getString(Res.string.error_something_went_wrong))
+                }
+
                 SettingsState.Event.Back -> back()
             }
         }
@@ -191,6 +209,11 @@ fun SettingsScreen(
                     disableUserBottomSheetUI = viewState.disableUserBottomSheetUI,
                     onAction = onAction,
                 )
+                EmailBottomSheetScreen(
+                    isShown = viewState.isShowEmailBottomSheet,
+                    emailInput = viewState.emailInput,
+                    onAction = onAction,
+                )
             }
 
             SettingsViewState.State.Error ->
@@ -221,11 +244,53 @@ fun SettingsScreenSuccess(
 
         NavigationCardWithDivider(
             onClick = {
+                onAction(SettingsState.Action.OnEmailClicked)
+            },
+            label = stringResource(Res.string.title_settings_email),
+            value = settingsState.email,
+        )
+
+        NavigationCardWithDivider(
+            onClick = {
                 onAction(SettingsState.Action.OnCityClicked)
             },
             label = stringResource(Res.string.common_city),
             value = settingsState.selectedCityName,
         )
+
+        Row(
+            modifier = Modifier.fillMaxWidth().padding(16.dp),
+            verticalAlignment = Alignment.CenterVertically,
+        ) {
+            Column(modifier = Modifier.weight(1f)) {
+                Text(
+                    text = stringResource(Res.string.title_settings_marketing_notifications),
+                    style = FoodDeliveryTheme.typography.bodyLarge,
+                    color = FoodDeliveryTheme.colors.mainColors.onSurface,
+                )
+                Text(
+                    modifier = Modifier.padding(top = 4.dp),
+                    text = stringResource(Res.string.msg_settings_marketing_notifications),
+                    style = FoodDeliveryTheme.typography.bodySmall,
+                    color = FoodDeliveryTheme.colors.mainColors.onSurfaceVariant,
+                )
+            }
+            Switch(
+                modifier = Modifier.padding(start = 8.dp),
+                checked = settingsState.marketingNotificationsEnabled,
+                onCheckedChange = { enabled ->
+                    onAction(SettingsState.Action.OnMarketingNotificationsChanged(enabled))
+                },
+                colors =
+                    SwitchDefaults.colors(
+                        checkedThumbColor = FoodDeliveryTheme.colors.mainColors.surface,
+                        checkedTrackColor = FoodDeliveryTheme.colors.mainColors.primary,
+                        uncheckedThumbColor = FoodDeliveryTheme.colors.mainColors.surface,
+                        uncheckedTrackColor = FoodDeliveryTheme.colors.mainColors.onSurfaceVariant,
+                        uncheckedBorderColor = FoodDeliveryTheme.colors.mainColors.onSurfaceVariant,
+                    ),
+            )
+        }
 
         TextButton(
             modifier = Modifier.padding(top = 16.dp).padding(horizontal = 16.dp),

@@ -7,8 +7,12 @@ import com.bunbeauty.core.domain.DisableUserUseCase
 import com.bunbeauty.core.domain.city.GetCityListUseCase
 import com.bunbeauty.core.domain.city.ObserveSelectedCityUseCase
 import com.bunbeauty.core.domain.city.SaveSelectedCityUseCase
+import com.bunbeauty.core.domain.repo.SettingsRepo
 import com.bunbeauty.core.domain.settings.ObserveSettingsUseCase
+import com.bunbeauty.core.domain.settings.UpdateEmailUseCase
+import com.bunbeauty.core.model.Settings
 import com.bunbeauty.core.domain.user.IUserInteractor
+import com.bunbeauty.core.domain.notification.NotificationSettingsHandler
 import com.bunbeauty.core.extension.launchSafe
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.Job
@@ -25,10 +29,17 @@ class SettingsViewModel(
     private val disableUserUseCase: DisableUserUseCase,
     private val userInteractor: IUserInteractor,
     private val analyticService: AnalyticService,
+    private val settingsRepository: SettingsRepo,
+    private val notificationSettingsHandler: NotificationSettingsHandler,
+    private val updateEmailUseCase: UpdateEmailUseCase,
 ) : SharedStateViewModel<SettingsState.DataState, SettingsState.Action, SettingsState.Event>(
         SettingsState.DataState(),
     ) {
     private var observeSettingsJob: Job? = null
+
+    private companion object {
+        val EMAIL_REGEX = Regex("^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$")
+    }
 
     override fun reduce(
         action: SettingsState.Action,
@@ -49,6 +60,12 @@ class SettingsViewModel(
             SettingsState.Action.DisableUser -> onDisableUserClicked()
             SettingsState.Action.CloseDisableUserBottomSheet -> onCloseDisableUserClickedBS()
             SettingsState.Action.DisableUserBottomSheet -> disableUser()
+            SettingsState.Action.OnEmailClicked -> onEmailClicked()
+            SettingsState.Action.CloseEmailBottomSheet -> onCloseEmailBottomSheet()
+            is SettingsState.Action.OnEmailChanged -> onEmailChanged(action.value)
+            SettingsState.Action.SaveEmail -> saveEmail()
+            is SettingsState.Action.OnMarketingNotificationsChanged ->
+                updateMarketingNotifications(action.enabled)
         }
     }
 
@@ -114,6 +131,7 @@ class SettingsViewModel(
                     )
                 }
                 observeSettingsJob?.cancel()
+                notificationSettingsHandler.setNewsSubscription(enabled = false)
                 userInteractor.clearUserCache()
                 addEvent {
                     SettingsState.Event.Back
@@ -151,6 +169,86 @@ class SettingsViewModel(
             disableUserUseCase()
             logout()
         }
+    }
+
+    private fun onEmailClicked() {
+        setState {
+            copy(
+                isShowEmailBottomSheet = true,
+                emailInput = dataState.value.settings?.email.orEmpty(),
+            )
+        }
+    }
+
+    private fun onCloseEmailBottomSheet() {
+        setState {
+            copy(isShowEmailBottomSheet = false)
+        }
+    }
+
+    private fun onEmailChanged(value: String) {
+        setState {
+            copy(emailInput = value)
+        }
+    }
+
+    private fun saveEmail() {
+        val email = dataState.value.emailInput.trim()
+        if (email.isNotEmpty() && !EMAIL_REGEX.matches(email)) {
+            addEvent { SettingsState.Event.ShowEmailChangingFailedEvent }
+            return
+        }
+        sharedScope.launchSafe(
+            block = {
+                val success = updateEmailUseCase(email.ifBlank { null })
+                if (success) {
+                    val currentSettings = dataState.value.settings
+                    setState {
+                        copy(
+                            settings = currentSettings?.withEmail(email),
+                            isShowEmailBottomSheet = false,
+                        )
+                    }
+                    addEvent { SettingsState.Event.ShowEmailChangedSuccessfullyEvent }
+                } else {
+                    addEvent { SettingsState.Event.ShowEmailChangingFailedEvent }
+                }
+            },
+            onError = {
+                addEvent { SettingsState.Event.ShowEmailChangingFailedEvent }
+            },
+        )
+    }
+
+    private fun Settings.withEmail(email: String): Settings {
+        return Settings(
+            userUuid = userUuid,
+            phoneNumber = phoneNumber,
+            email = email.ifBlank { null },
+            personalDiscountPercent = personalDiscountPercent,
+            marketingNotificationsEnabled = marketingNotificationsEnabled,
+            systemNotificationsEnabled = systemNotificationsEnabled,
+        )
+    }
+
+    private fun updateMarketingNotifications(enabled: Boolean) {
+        sharedScope.launchSafe(
+            block = {
+                val settings = settingsRepository.updateMarketingNotifications(enabled)
+                if (settings == null) {
+                    addEvent { SettingsState.Event.ShowNotificationSettingsFailedEvent }
+                } else {
+                    setState { copy(settings = settings) }
+                    notificationSettingsHandler.setNewsSubscription(settings.marketingNotificationsEnabled)
+                    if (enabled) {
+                        notificationSettingsHandler.requestPermission()
+                    }
+                }
+            },
+            onError = {
+                addEvent { SettingsState.Event.ShowNotificationSettingsFailedEvent }
+            },
+        )
     }
 
     @OptIn(ExperimentalCoroutinesApi::class)

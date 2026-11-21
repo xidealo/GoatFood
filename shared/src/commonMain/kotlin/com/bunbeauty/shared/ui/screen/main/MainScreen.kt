@@ -26,6 +26,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -38,15 +39,19 @@ import com.bunbeauty.designsystem.ui.LocalStatusBarColor
 import com.bunbeauty.designsystem.ui.SharedTransitionScopeComposition
 import com.bunbeauty.designsystem.ui.element.footer.LocalSiteFooterActions
 import com.bunbeauty.designsystem.ui.element.footer.SiteFooterActions
+import com.bunbeauty.shared.domain.feature.notification.NotificationNavigation
 import com.bunbeauty.shared.presentation.MainViewModel
 import com.bunbeauty.shared.ui.navigation.FoodDeliveryNavHost
 import com.bunbeauty.shared.ui.navigation.emptyNavOptions
 import com.bunbeauty.shared.ui.navigation.legal.navigateToPrivacyPolicyScreen
+import com.bunbeauty.shared.ui.navigation.orderdetails.navigateToOrderDetailsScreen
+import com.bunbeauty.shared.ui.navigation.profile.navigateToProfileScreen
 import com.bunbeauty.shared.ui.navigation.legal.navigateToTermsOfServiceScreen
 import com.bunbeauty.shared.ui.navigation.legal.navigateToUserAgreementScreen
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.stringResource
+import org.koin.compose.koinInject
 import org.koin.compose.viewmodel.koinViewModel
 import papakarlo.designsystem.generated.resources.Res
 import papakarlo.designsystem.generated.resources.error_no_internet
@@ -61,12 +66,29 @@ fun MainScreen(
     val mainState by viewModel.mainState.collectAsState()
     val snackbarHostState = remember { SnackbarHostState() }
     val navController = rememberNavController()
+    val notificationNavigation = koinInject<NotificationNavigation>()
+    val pendingNotification by notificationNavigation.pending.collectAsState()
+    var navigationReady by remember { mutableStateOf(false) }
 
     HandleEventList(
         eventList = mainState.eventList,
         snackbarHostState = snackbarHostState,
         consumeEventList = viewModel::consumeEventList,
     )
+
+    LaunchedEffect(navigationReady, pendingNotification) {
+        val notification = pendingNotification ?: return@LaunchedEffect
+        if (!navigationReady) {
+            return@LaunchedEffect
+        }
+        viewModel.onNotificationOpened(notification)
+        if (viewModel.isAuthorized()) {
+            navController.navigateToOrderDetailsScreen(emptyNavOptions, notification.orderUuid)
+        } else {
+            navController.navigateToProfileScreen(emptyNavOptions)
+        }
+        notificationNavigation.consume(notification)
+    }
 
     val color = FoodDeliveryTheme.colors.mainColors.surface
     val statusBarColor = remember { mutableStateOf(color) }
@@ -137,6 +159,7 @@ fun MainScreen(
                                     message,
                                 )
                             },
+                            onReady = { navigationReady = true },
                         )
                     }
                 }

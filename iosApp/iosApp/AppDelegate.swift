@@ -16,75 +16,87 @@ class AppDelegate: NSObject, UIApplicationDelegate {
     let gcmMessageIDKey = "gcm.Message_ID"
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions _: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
-        // On device, didFinishLaunching can race App.init. Always bootstrap before Messaging.
         AppBootstrap.startIfNeeded()
 
         if #available(iOS 10.0, *) {
-            // For iOS 10 display notification (sent via APNS)
             UNUserNotificationCenter.current().delegate = self
             let authOptions: UNAuthorizationOptions = [.alert, .badge, .sound]
             UNUserNotificationCenter.current().requestAuthorization(
                 options: authOptions,
-                completionHandler: { _, _ in }
+                completionHandler: { _, _ in
+                    self.syncNotificationPermission()
+                }
             )
         } else {
-            let settings =
-                UIUserNotificationSettings(types: [.alert, .badge, .sound], categories: nil)
+            let settings = UIUserNotificationSettings(types: [.alert, .badge, .sound], categories: nil)
             application.registerUserNotificationSettings(settings)
         }
 
         application.registerForRemoteNotifications()
-
-        // Setting the delegate can synchronously deliver a cached FCM token.
-        // That path uses iosComponent / Koin — only safe after AppBootstrap.
         Messaging.messaging().delegate = self
+        syncNewsSubscription()
+        syncNotificationPermission()
 
         return true
     }
 
+    func applicationDidBecomeActive(_: UIApplication) {
+        syncNotificationPermission()
+    }
+
     func application(_: UIApplication, supportedInterfaceOrientationsFor _: UIWindow?) -> UIInterfaceOrientationMask {
-        return restrictRotation
+        return .portrait
     }
 
     func application(_: UIApplication, didReceiveRemoteNotification userInfo: [AnyHashable: Any], fetchCompletionHandler _: @escaping (UIBackgroundFetchResult) -> Void) {
-        // Print message ID.
         if let messageID = userInfo[gcmMessageIDKey] {
             print("Message ID: \(messageID)")
         }
+    }
 
-        // Print full message.
-        print(userInfo)
+    private func syncNotificationPermission() {
+        UNUserNotificationCenter.current().getNotificationSettings { settings in
+            let enabled = settings.authorizationStatus == .authorized || settings.authorizationStatus == .provisional
+            iosComponent.provideUpdateNotificationPermissionUseCase().invoke(enabled: enabled) { _ in }
+        }
+    }
+
+    private func syncNewsSubscription() {
+        iosComponent.provideSyncNotificationSubscriptionUseCase().invoke { _ in }
+    }
+
+    private func handleNotificationOpen(userInfo: [AnyHashable: Any]) {
+        guard userInfo["destination"] as? String == "order_details",
+              let notificationId = userInfo["notificationId"] as? String,
+              let orderUuid = userInfo["orderUuid"] as? String else { return }
+
+        DispatchQueue.main.async {
+            iosComponent.provideNotificationNavigation().open(
+                notification: NotificationOpen(
+                    notificationId: notificationId,
+                    orderUuid: orderUuid,
+                    campaign: userInfo["campaign"] as? String ?? "",
+                    touch: userInfo["touch"] as? String ?? "",
+                    variant: userInfo["variant"] as? String ?? ""
+                )
+            )
+        }
     }
 }
 
 extension AppDelegate: UNUserNotificationCenterDelegate {
-    // Receive displayed notifications for iOS 10 devices.
     func userNotificationCenter(_: UNUserNotificationCenter,
                                 willPresent notification: UNNotification) async
         -> UNNotificationPresentationOptions {
-        let userInfo = notification.request.content.userInfo
-
-        print(userInfo)
-
-        // Change this to your preferred presentation option
-        return [[.alert, .sound]]
+        return [.alert, .sound]
     }
 
     func userNotificationCenter(_: UNUserNotificationCenter,
                                 didReceive response: UNNotificationResponse) async {
-        let userInfo = response.notification.request.content.userInfo
-
-        // ...
-
-        // With swizzling disabled you must let Messaging know about the message, for Analytics
-        // Messaging.messaging().appDidReceiveMessage(userInfo)
-
-        // Print full message.
-        print(userInfo)
+        handleNotificationOpen(userInfo: response.notification.request.content.userInfo)
     }
 
-    func application(_ application: UIApplication, didRegisterForRemoteNotificationsWithDeviceToken deviceToken: Data) {
-        print("Registered for Apple Remote Notifications")
+    func application(_: UIApplication, didRegisterForRemoteNotificationsWithDeviceToken deviceToken: Data) {
         Messaging.messaging().setAPNSToken(deviceToken, type: .unknown)
     }
 }
@@ -94,13 +106,8 @@ extension AppDelegate: MessagingDelegate {
         iosComponent.provideUpdateNotificationUseCase().invoke { error in
             if error != nil {
                 print("Token was not updated")
-            } else {
-                print("Token was updated")
             }
         }
-
-        iosComponent.provideSubscribeToNotificationUseCase().invoke(
-            companyUuid: iosComponent.provideCompanyUuidProvider().companyUuid
-        )
+        syncNewsSubscription()
     }
 }

@@ -16,6 +16,7 @@ import com.bunbeauty.core.domain.deferred_time.GetMinTimeUseCase
 import com.bunbeauty.core.domain.discount.GetDiscountUseCase
 import com.bunbeauty.core.domain.discount.GetDiscountUseCaseImpl
 import com.bunbeauty.core.domain.link.GetLinkUseCase
+import com.bunbeauty.core.domain.notification.NotificationSettingsHandler
 import com.bunbeauty.core.domain.menu_product.GetMenuProductListUseCase
 import com.bunbeauty.core.domain.menu_product.GetMenuProductListUseCaseImpl
 import com.bunbeauty.core.domain.menu_product.GetMenuProductUseCase
@@ -25,7 +26,11 @@ import com.bunbeauty.core.domain.settings.UpdateEmailUseCase
 import com.bunbeauty.core.domain.splash.CheckOneCityUseCase
 import com.bunbeauty.core.domain.splash.CheckUpdateUseCase
 import com.bunbeauty.core.domain.splash.SaveOneCityUseCase
+import com.bunbeauty.shared.domain.feature.notification.NotificationNavigation
+import com.bunbeauty.shared.domain.feature.notification.NotificationSettingsHandlerImpl
 import com.bunbeauty.shared.domain.feature.notification.SubscribeToNotificationUseCase
+import com.bunbeauty.shared.domain.feature.notification.SyncNotificationSubscriptionUseCase
+import com.bunbeauty.shared.domain.feature.notification.UpdateNotificationPermissionUseCase
 import org.koin.dsl.module
 
 internal fun useCaseModules() =
@@ -107,6 +112,24 @@ internal fun useCaseModules() =
         }
         factory {
             SubscribeToNotificationUseCase()
+        }
+        single { NotificationNavigation() }
+        single<NotificationSettingsHandler> {
+            NotificationSettingsHandlerImpl(
+                notificationPermissionRequester = get(),
+                subscribeToNotificationUseCase = get(),
+                companyUuidProvider = get(),
+            )
+        }
+        factory {
+            UpdateNotificationPermissionUseCase(userRepository = get())
+        }
+        factory {
+            SyncNotificationSubscriptionUseCase(
+                settingsRepository = get(),
+                subscribeToNotificationUseCase = get(),
+                companyUuidProvider = get(),
+            )
         }
         factory<GetDiscountUseCase> {
             GetDiscountUseCaseImpl(

@@ -2,10 +2,14 @@ package com.bunbeauty.shared.presentation
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.bunbeauty.analytic.AnalyticService
+import com.bunbeauty.analytic.event.notification.NotificationOpenEvent
 import com.bunbeauty.core.Logger
+import com.bunbeauty.core.domain.repo.UserRepo
 import com.bunbeauty.core.domain.orderavailable.IsOrderAvailableUseCase
 import com.bunbeauty.core.extension.launchSafe
 import com.bunbeauty.shared.NetworkUtil
+import com.bunbeauty.shared.domain.feature.notification.NotificationOpen
 import com.bunbeauty.shared.ui.screen.main.FoodDeliveryMessage
 import com.bunbeauty.shared.ui.screen.main.FoodDeliveryMessageType
 import com.bunbeauty.shared.ui.screen.main.MainState
@@ -21,6 +25,8 @@ private const val MAIN_VIEW_MODEL_TAG = "MainViewModel"
 class MainViewModel(
     private val networkUtil: NetworkUtil,
     private val isOrderAvailableUseCase: IsOrderAvailableUseCase,
+    private val userRepository: UserRepo,
+    private val analyticService: AnalyticService,
 ) : ViewModel() {
     private val mutableMainState: MutableStateFlow<MainState> = MutableStateFlow(MainState())
     val mainState: StateFlow<MainState> = mutableMainState.asStateFlow()
@@ -46,6 +52,22 @@ class MainViewModel(
             text = text,
             type = FoodDeliveryMessageType.ERROR,
             paddingBottom = 0,
+        )
+    }
+
+    suspend fun isAuthorized(): Boolean = userRepository.getToken() != null
+
+    fun onNotificationOpened(notification: NotificationOpen) {
+        analyticService.sendEvent(
+            NotificationOpenEvent(
+                campaign = notification.campaign,
+                touch = notification.touch,
+                variant = notification.variant,
+            ),
+        )
+        viewModelScope.launchSafe(
+            block = { userRepository.markNotificationOpened(notification.notificationId) },
+            onError = { error -> Logger.logE(MAIN_VIEW_MODEL_TAG, error.stackTraceToString()) },
         )
     }
 
