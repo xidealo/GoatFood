@@ -5,4 +5,6 @@ class Settings(
     val phoneNumber: String,
     val email: String?,
     val personalDiscountPercent: Int? = null,
+    val marketingNotificationsEnabled: Boolean = true,
+    val systemNotificationsEnabled: Boolean = false,
 )

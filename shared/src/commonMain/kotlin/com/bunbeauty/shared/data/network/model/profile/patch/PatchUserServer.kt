@@ -9,4 +9,6 @@ data class PatchUserServer(
     val email: String? = null,
     @SerialName("isActive")
     val isActive: Boolean? = null,
+    @SerialName("marketingNotificationsEnabled")
+    val marketingNotificationsEnabled: Boolean? = null,
 )

@@ -162,6 +162,16 @@ actual class DataStoreRepository :
                                     .integerForKey(SETTINGS_PERSONAL_DISCOUNT_PERCENT_KEY)
                                     .toInt()
                             },
+                    marketingNotificationsEnabled =
+                        NSUserDefaults.standardUserDefaults
+                            .objectForKey(SETTINGS_MARKETING_NOTIFICATIONS_KEY)
+                            ?.let {
+                                NSUserDefaults.standardUserDefaults
+                                    .boolForKey(SETTINGS_MARKETING_NOTIFICATIONS_KEY)
+                            } ?: true,
+                    systemNotificationsEnabled =
+                        NSUserDefaults.standardUserDefaults
+                            .boolForKey(SETTINGS_SYSTEM_NOTIFICATIONS_KEY),
                 ),
             )
         }
@@ -175,6 +185,14 @@ actual class DataStoreRepository :
             SETTINGS_PHONE_NUMBER_KEY,
         )
         NSUserDefaults.standardUserDefaults.setObject(settings.email, SETTINGS_EMAIL_KEY)
+        NSUserDefaults.standardUserDefaults.setBool(
+            settings.marketingNotificationsEnabled,
+            SETTINGS_MARKETING_NOTIFICATIONS_KEY,
+        )
+        NSUserDefaults.standardUserDefaults.setBool(
+            settings.systemNotificationsEnabled,
+            SETTINGS_SYSTEM_NOTIFICATIONS_KEY,
+        )
         val personalDiscountPercent = settings.personalDiscountPercent
         if (personalDiscountPercent != null) {
             NSUserDefaults.standardUserDefaults.setObject(
@@ -238,6 +256,8 @@ actual class DataStoreRepository :
         NSUserDefaults.standardUserDefaults.removeObjectForKey(SETTINGS_PHONE_NUMBER_KEY)
         NSUserDefaults.standardUserDefaults.removeObjectForKey(SETTINGS_EMAIL_KEY)
         NSUserDefaults.standardUserDefaults.removeObjectForKey(SETTINGS_PERSONAL_DISCOUNT_PERCENT_KEY)
+        NSUserDefaults.standardUserDefaults.removeObjectForKey(SETTINGS_MARKETING_NOTIFICATIONS_KEY)
+        NSUserDefaults.standardUserDefaults.removeObjectForKey(SETTINGS_SYSTEM_NOTIFICATIONS_KEY)
     }
 
     companion object {
@@ -250,6 +270,8 @@ actual class DataStoreRepository :
         private const val SETTINGS_EMAIL_KEY = "SETTINGS_EMAIL_KEY"
         private const val SETTINGS_PERSONAL_DISCOUNT_PERCENT_KEY =
             "SETTINGS_PERSONAL_DISCOUNT_PERCENT_KEY"
+        private const val SETTINGS_MARKETING_NOTIFICATIONS_KEY = "SETTINGS_MARKETING_NOTIFICATIONS_KEY"
+        private const val SETTINGS_SYSTEM_NOTIFICATIONS_KEY = "SETTINGS_SYSTEM_NOTIFICATIONS_KEY"
         private const val SELECTED_PAYMENT_METHOD_UUID_KEY = "SELECTED_PAYMENT_METHOD_UUID_KEY"
         private const val WITHOUT_UTENSILS_KEY = "WITHOUT_UTENSILS_KEY"
         private const val FIRST_DISCOUNT_KEY = "FIRST_DISCOUNT_KEY"

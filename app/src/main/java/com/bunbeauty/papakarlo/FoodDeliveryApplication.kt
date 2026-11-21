@@ -7,6 +7,7 @@ import android.media.AudioAttributes
 import android.media.RingtoneManager
 import com.bunbeauty.analytic.activateAppMetrica
 import com.bunbeauty.core.Constants.CHANNEL_ID
+import com.bunbeauty.core.domain.repo.SettingsRepo
 import com.bunbeauty.papakarlo.di.appModule
 import com.bunbeauty.shared.data.CompanyUuidProvider
 import com.bunbeauty.shared.di.initKoin
@@ -15,6 +16,7 @@ import com.google.firebase.analytics.FirebaseAnalytics
 import com.google.firebase.crashlytics.FirebaseCrashlytics
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.launch
 import org.koin.android.ext.koin.androidContext
 import org.koin.android.ext.koin.androidLogger
 import org.koin.core.component.KoinComponent
@@ -32,6 +34,7 @@ class FoodDeliveryApplication :
 
     private val subscribeToNotification: SubscribeToNotificationUseCase by inject()
     private val companyUuidProvider: CompanyUuidProvider by inject()
+    private val settingsRepository: SettingsRepo by inject()
 
     override fun onCreate() {
         setTheme(R.style.AppTheme)
@@ -53,7 +56,12 @@ class FoodDeliveryApplication :
             context = applicationContext,
             dataSendingEnabled = !BuildConfig.DEBUG,
         )
-        subscribeToNotification(companyUuid = companyUuidProvider.companyUuid)
+        launch {
+            subscribeToNotification(
+                companyUuid = companyUuidProvider.companyUuid,
+                enabled = settingsRepository.getSettings()?.marketingNotificationsEnabled == true,
+            )
+        }
         createNotificationChannel()
     }
 

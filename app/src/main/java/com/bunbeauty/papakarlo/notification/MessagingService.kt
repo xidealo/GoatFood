@@ -5,7 +5,6 @@ import android.annotation.SuppressLint
 import android.app.PendingIntent
 import android.content.Intent
 import android.content.pm.PackageManager
-import android.os.Build
 import android.util.Log
 import androidx.core.app.ActivityCompat
 import androidx.core.app.NotificationCompat
@@ -40,7 +39,7 @@ class MessagingService : FirebaseMessagingService() {
             Logger.logD(NOTIFICATION_TAG, "isNotificationPermissionGranted")
             remoteMessage.notification?.let { notification ->
                 Logger.logD(NOTIFICATION_TAG, "showNotification")
-                showNotification(notification)
+                showNotification(remoteMessage)
             }
         }
     }
@@ -50,18 +49,22 @@ class MessagingService : FirebaseMessagingService() {
         userRepository.updateNotificationToken(notificationToken = token)
     }
 
-    @SuppressLint("UnspecifiedImmutableFlag", "MissingPermission")
-    private fun showNotification(notification: RemoteMessage.Notification) {
+    @SuppressLint("MissingPermission")
+    private fun showNotification(remoteMessage: RemoteMessage) {
+        val notification = remoteMessage.notification ?: return
+        val notificationId = remoteMessage.data["notificationId"]
+        val notificationRequestCode = notificationId?.hashCode() ?: NOTIFICATION_ID
         val intent =
             Intent(this, MainActivity::class.java).apply {
-                flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+                flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP
+                remoteMessage.data.forEach { (key, value) -> putExtra(key, value) }
             }
-        val pendingIntent: PendingIntent? =
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-                PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_MUTABLE)
-            } else {
-                PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_ONE_SHOT)
-            }
+        val pendingIntent = PendingIntent.getActivity(
+            this,
+            notificationRequestCode,
+            intent,
+            PendingIntent.FLAG_ONE_SHOT or PendingIntent.FLAG_IMMUTABLE,
+        )
 
         val builder =
             NotificationCompat
@@ -75,6 +78,6 @@ class MessagingService : FirebaseMessagingService() {
                 .setPriority(NotificationCompat.PRIORITY_DEFAULT)
                 .setContentIntent(pendingIntent)
 
-        NotificationManagerCompat.from(this).notify(NOTIFICATION_ID, builder.build())
+        NotificationManagerCompat.from(this).notify(notificationRequestCode, builder.build())
     }
 }

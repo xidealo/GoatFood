@@ -15,6 +15,7 @@ fun FoodDeliveryNavHost(
     navController: NavHostController,
     showInfoMessage: (String, Int) -> Unit,
     showErrorMessage: (String) -> Unit,
+    onReady: () -> Unit = {},
 ) {
     NavHost(
         navController = navController,
@@ -33,5 +34,6 @@ fun FoodDeliveryNavHost(
 
     LaunchedEffect(navController) {
         navController.bindSystemBackNavigation()
+        onReady()
     }
 }

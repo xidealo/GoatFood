@@ -10,5 +10,7 @@ class SettingsMapper {
             phoneNumber = settingsServer.phoneNumber,
             email = settingsServer.email,
             personalDiscountPercent = settingsServer.personalDiscountPercent,
+            marketingNotificationsEnabled = settingsServer.marketingNotificationsEnabled,
+            systemNotificationsEnabled = settingsServer.systemNotificationsEnabled,
         )
 }

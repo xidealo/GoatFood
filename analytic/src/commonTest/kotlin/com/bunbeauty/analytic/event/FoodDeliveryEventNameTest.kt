@@ -14,6 +14,7 @@ import com.bunbeauty.analytic.event.favorite.RemoveFavoriteClickEvent
 import com.bunbeauty.analytic.event.menu.AddMenuProductClickEvent
 import com.bunbeauty.analytic.event.menu.AddMenuProductDetailsClickEvent
 import com.bunbeauty.analytic.event.menu.LoadedMenuEvent
+import com.bunbeauty.analytic.event.notification.NotificationOpenEvent
 import com.bunbeauty.analytic.event.order.OrderCreateClickEvent
 import com.bunbeauty.analytic.event.order.OrderCreateFailEvent
 import com.bunbeauty.analytic.event.order.OrderCreateSuccessEvent
@@ -74,6 +75,7 @@ class FoodDeliveryEventNameTest {
                 OrderCreateSuccessEvent(),
                 OrderCreateFailEvent(error = "unknown"),
                 OrderDeliveryToggleEvent(isDelivery = false),
+                NotificationOpenEvent(campaign = "client_return", touch = "1", variant = "PERSONAL"),
             )
 
         events.forEach { event ->

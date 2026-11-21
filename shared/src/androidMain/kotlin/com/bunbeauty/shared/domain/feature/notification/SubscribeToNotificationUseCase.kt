@@ -7,11 +7,15 @@ import com.google.firebase.Firebase
 import com.google.firebase.messaging.messaging
 
 actual class SubscribeToNotificationUseCase {
-    actual operator fun invoke(companyUuid: String) {
-        Firebase.messaging
-            .subscribeToTopic("$NEWS_NOTIFICATION_PREFIX$companyUuid")
-            .addOnSuccessListener {
-                Logger.logD(NOTIFICATION_TAG, "SubscribeToNotification success")
-            }
+    actual operator fun invoke(companyUuid: String, enabled: Boolean) {
+        val topic = "$NEWS_NOTIFICATION_PREFIX$companyUuid"
+        val task = if (enabled) {
+            Firebase.messaging.subscribeToTopic(topic)
+        } else {
+            Firebase.messaging.unsubscribeFromTopic(topic)
+        }
+        task.addOnSuccessListener {
+            Logger.logD(NOTIFICATION_TAG, "Notification subscription updated")
+        }
     }
 }
