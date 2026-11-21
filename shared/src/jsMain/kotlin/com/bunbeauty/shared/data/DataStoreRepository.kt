@@ -49,12 +49,16 @@ actual class DataStoreRepository :
             phoneNumber = lsGet(SETTINGS_PHONE_NUMBER_KEY).orEmpty(),
             email = lsGet(SETTINGS_EMAIL_KEY),
             personalDiscountPercent = lsGet(SETTINGS_PERSONAL_DISCOUNT_PERCENT_KEY)?.toIntOrNull(),
+            marketingNotificationsEnabled = lsGet(SETTINGS_MARKETING_NOTIFICATIONS_KEY)?.toBooleanStrictOrNull() ?: true,
+            systemNotificationsEnabled = lsGet(SETTINGS_SYSTEM_NOTIFICATIONS_KEY).toBoolean(),
         )
 
     actual override suspend fun saveSettings(settings: Settings) {
         lsSet(SETTINGS_USER_UUID_KEY, settings.userUuid)
         lsSet(SETTINGS_PHONE_NUMBER_KEY, settings.phoneNumber)
         lsSet(SETTINGS_EMAIL_KEY, settings.email.orEmpty())
+        lsSet(SETTINGS_MARKETING_NOTIFICATIONS_KEY, settings.marketingNotificationsEnabled.toString())
+        lsSet(SETTINGS_SYSTEM_NOTIFICATIONS_KEY, settings.systemNotificationsEnabled.toString())
         val personalDiscountPercent = settings.personalDiscountPercent
         if (personalDiscountPercent != null) {
             lsSet(SETTINGS_PERSONAL_DISCOUNT_PERCENT_KEY, personalDiscountPercent.toString())
@@ -164,6 +168,8 @@ actual class DataStoreRepository :
         private const val SETTINGS_EMAIL_KEY = "SETTINGS_EMAIL_KEY"
         private const val SETTINGS_PERSONAL_DISCOUNT_PERCENT_KEY =
             "SETTINGS_PERSONAL_DISCOUNT_PERCENT_KEY"
+        private const val SETTINGS_MARKETING_NOTIFICATIONS_KEY = "SETTINGS_MARKETING_NOTIFICATIONS_KEY"
+        private const val SETTINGS_SYSTEM_NOTIFICATIONS_KEY = "SETTINGS_SYSTEM_NOTIFICATIONS_KEY"
         private const val SELECTED_PAYMENT_METHOD_UUID_KEY = "SELECTED_PAYMENT_METHOD_UUID_KEY"
         private const val WITHOUT_UTENSILS_KEY = "WITHOUT_UTENSILS_KEY"
         private const val FIRST_DISCOUNT_KEY = "FIRST_DISCOUNT_KEY"

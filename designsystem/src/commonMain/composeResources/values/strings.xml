@@ -238,6 +238,8 @@
     <string name="title_settings">Настройки</string>
     <string name="hint_settings_phone">Номер телефона</string>
     <string name="msg_settings_email_updated">Почта успешно обновлена</string>
+    <string name="title_settings_marketing_notifications">Новости и персональные напоминания</string>
+    <string name="msg_settings_marketing_notifications">Предложения и напоминания о прошлых заказах. Можно отключить в любой момент</string>
 
     <!-- ORDERS -->
     <string name="title_my_orders">Мои заказы</string>

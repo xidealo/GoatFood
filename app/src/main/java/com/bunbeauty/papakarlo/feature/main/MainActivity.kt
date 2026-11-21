@@ -1,6 +1,7 @@
 package com.bunbeauty.papakarlo.feature.main
 
 import android.Manifest
+import android.content.Intent
 import android.content.res.Configuration
 import android.os.Build
 import android.os.Bundle
@@ -30,21 +31,31 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.dp
 import androidx.core.app.NotificationManagerCompat
+import com.bunbeauty.core.domain.repo.UserRepo
 import com.bunbeauty.designsystem.theme.FoodDeliveryTheme
 import com.bunbeauty.papakarlo.BuildConfig
 import com.bunbeauty.papakarlo.R
+import com.bunbeauty.shared.domain.feature.notification.NotificationNavigation
+import com.bunbeauty.shared.domain.feature.notification.NotificationOpen
+import com.bunbeauty.shared.domain.feature.notification.NotificationPermissionRequester
 import com.bunbeauty.shared.presentation.MainViewModel
 import com.bunbeauty.shared.ui.main.IMessageHost
 import com.bunbeauty.shared.ui.screen.main.MainScreen
+import org.koin.android.ext.android.inject
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class MainActivity :
     AppCompatActivity(R.layout.layout_compose),
     IMessageHost {
     val viewModel: MainViewModel by viewModel()
+    private val notificationNavigation: NotificationNavigation by inject()
+    private val notificationPermissionRequester: NotificationPermissionRequester by inject()
+    private val userRepository: UserRepo by inject()
 
     private val requestPermissionLauncher by lazy {
-        registerForActivityResult(ActivityResultContracts.RequestPermission()) { }
+        registerForActivityResult(ActivityResultContracts.RequestPermission()) {
+            syncNotificationPermission()
+        }
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -88,7 +99,25 @@ class MainActivity :
             }
         }
 
+        notificationPermissionRequester.register(::checkNotificationPermission)
         checkNotificationPermission()
+        handleNotificationIntent(intent)
+    }
+
+    override fun onResume() {
+        super.onResume()
+        syncNotificationPermission()
+    }
+
+    override fun onNewIntent(intent: Intent) {
+        super.onNewIntent(intent)
+        setIntent(intent)
+        handleNotificationIntent(intent)
+    }
+
+    override fun onDestroy() {
+        notificationPermissionRequester.unregister()
+        super.onDestroy()
     }
 
     @Composable
@@ -137,6 +166,32 @@ class MainActivity :
                 requestPermissionLauncher.launch(Manifest.permission.POST_NOTIFICATIONS)
             }
         }
+    }
+
+    private fun syncNotificationPermission() {
+        userRepository.updateNotificationPermission(
+            NotificationManagerCompat.from(this).areNotificationsEnabled(),
+        )
+    }
+
+    private fun handleNotificationIntent(intent: Intent) {
+        if (intent.getStringExtra("destination") != "order_details") {
+            return
+        }
+        val notificationId = intent.getStringExtra("notificationId") ?: return
+        val orderUuid = intent.getStringExtra("orderUuid") ?: return
+        notificationNavigation.open(
+            NotificationOpen(
+                notificationId = notificationId,
+                orderUuid = orderUuid,
+                campaign = intent.getStringExtra("campaign").orEmpty(),
+                touch = intent.getStringExtra("touch").orEmpty(),
+                variant = intent.getStringExtra("variant").orEmpty(),
+            ),
+        )
+        intent.removeExtra("destination")
+        intent.removeExtra("notificationId")
+        intent.removeExtra("orderUuid")
     }
 
     fun isDarkTheme(): Boolean =

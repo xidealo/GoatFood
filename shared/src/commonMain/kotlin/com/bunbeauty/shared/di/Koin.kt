@@ -99,7 +99,10 @@ import com.bunbeauty.shared.di.usecase.orderUseCaseModule
 import com.bunbeauty.shared.di.usecase.paymentUseCaseModule
 import com.bunbeauty.shared.di.usecase.useCaseModules
 import com.bunbeauty.shared.di.usecase.userAddressUseCaseModule
+import com.bunbeauty.shared.domain.feature.notification.NotificationNavigation
 import com.bunbeauty.shared.domain.feature.notification.SubscribeToNotificationUseCase
+import com.bunbeauty.shared.domain.feature.notification.SyncNotificationSubscriptionUseCase
+import com.bunbeauty.shared.domain.feature.notification.UpdateNotificationPermissionUseCase
 import com.bunbeauty.splash.di.splashFeatureModule
 import com.bunbeauty.update.di.updateFeatureModule
 import org.koin.core.component.KoinComponent
@@ -259,6 +262,12 @@ class IosComponent : KoinComponent {
     fun provideGetPaymentMethodListUseCase(): GetPaymentMethodListUseCase = get()
 
     fun provideSubscribeToNotificationUseCase(): SubscribeToNotificationUseCase = get()
+
+    fun provideUpdateNotificationPermissionUseCase(): UpdateNotificationPermissionUseCase = get()
+
+    fun provideNotificationNavigation(): NotificationNavigation = get()
+
+    fun provideSyncNotificationSubscriptionUseCase(): SyncNotificationSubscriptionUseCase = get()
 
     fun provideGetSelectablePaymentMethodListUseCase(): GetSelectablePaymentMethodListUseCase = get()
 

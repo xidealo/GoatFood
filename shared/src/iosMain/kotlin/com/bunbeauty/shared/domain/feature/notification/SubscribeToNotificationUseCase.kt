@@ -6,9 +6,12 @@ import kotlinx.cinterop.ExperimentalForeignApi
 
 actual class SubscribeToNotificationUseCase {
     @OptIn(ExperimentalForeignApi::class)
-    actual operator fun invoke(companyUuid: String) {
-        FIRMessaging
-            .messaging()
-            .subscribeToTopic("${Constants.NEWS_NOTIFICATION_PREFIX}$companyUuid")
+    actual operator fun invoke(companyUuid: String, enabled: Boolean) {
+        val topic = "${Constants.NEWS_NOTIFICATION_PREFIX}$companyUuid"
+        if (enabled) {
+            FIRMessaging.messaging().subscribeToTopic(topic)
+        } else {
+            FIRMessaging.messaging().unsubscribeFromTopic(topic)
+        }
     }
 }

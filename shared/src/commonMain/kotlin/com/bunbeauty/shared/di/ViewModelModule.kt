@@ -12,6 +12,8 @@ fun viewModelModule() =
             MainViewModel(
                 isOrderAvailableUseCase = get(),
                 networkUtil = get(),
+                userRepository = get(),
+                analyticService = get(),
             )
         }
         viewModel {

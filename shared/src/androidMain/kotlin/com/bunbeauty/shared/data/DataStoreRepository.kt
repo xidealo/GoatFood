@@ -89,6 +89,10 @@ actual class DataStoreRepository :
                         email = settingsDataStore[SETTINGS_EMAIL_KEY],
                         personalDiscountPercent =
                             settingsDataStore[SETTINGS_PERSONAL_DISCOUNT_PERCENT_KEY],
+                        marketingNotificationsEnabled =
+                            settingsDataStore[SETTINGS_MARKETING_NOTIFICATIONS_KEY] ?: true,
+                        systemNotificationsEnabled =
+                            settingsDataStore[SETTINGS_SYSTEM_NOTIFICATIONS_KEY] ?: false,
                     )
                 }
             }
@@ -101,6 +105,8 @@ actual class DataStoreRepository :
             settingsDataStore[SETTINGS_USER_UUID_KEY] = settings.userUuid
             settingsDataStore[SETTINGS_PHONE_NUMBER_KEY] = settings.phoneNumber
             settingsDataStore[SETTINGS_EMAIL_KEY] = settings.email.orEmpty()
+            settingsDataStore[SETTINGS_MARKETING_NOTIFICATIONS_KEY] = settings.marketingNotificationsEnabled
+            settingsDataStore[SETTINGS_SYSTEM_NOTIFICATIONS_KEY] = settings.systemNotificationsEnabled
             val personalDiscountPercent = settings.personalDiscountPercent
             if (personalDiscountPercent != null) {
                 settingsDataStore[SETTINGS_PERSONAL_DISCOUNT_PERCENT_KEY] = personalDiscountPercent
@@ -270,6 +276,10 @@ actual class DataStoreRepository :
         private val SETTINGS_EMAIL_KEY = stringPreferencesKey(SETTINGS_EMAIL)
         private val SETTINGS_PERSONAL_DISCOUNT_PERCENT_KEY =
             intPreferencesKey(SETTINGS_PERSONAL_DISCOUNT_PERCENT)
+        private val SETTINGS_MARKETING_NOTIFICATIONS_KEY =
+            booleanPreferencesKey("settings marketing notifications")
+        private val SETTINGS_SYSTEM_NOTIFICATIONS_KEY =
+            booleanPreferencesKey("settings system notifications")
 
         private const val USER_UUID_DATA_STORE = "user id data store"
         private const val USER_UUID = "user uuid"

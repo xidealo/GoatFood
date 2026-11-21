@@ -30,6 +30,8 @@ interface SettingsState {
         data object ShowEmailChangingFailedEvent : Event
 
         data object Back : Event
+
+        data object ShowNotificationSettingsFailedEvent : Event
     }
 
     sealed interface Action : BaseAction {
@@ -52,6 +54,10 @@ interface SettingsState {
         data object BackClick : Action
 
         data object CloseLogoutBottomSheet : Action
+
+        data class OnMarketingNotificationsChanged(
+            val enabled: Boolean,
+        ) : Action
 
         data class OnCitySelected(
             val cityUuid: String,
