@@ -13,4 +13,6 @@ interface SettingsRepo {
     suspend fun updateEmail(
         email: String,
     ): Settings?
+
+    suspend fun updateMarketingNotifications(enabled: Boolean): Settings?
 }

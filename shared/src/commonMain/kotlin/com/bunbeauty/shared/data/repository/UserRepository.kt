@@ -11,6 +11,8 @@ import com.bunbeauty.shared.data.dao.user_address.IUserAddressDao
 import com.bunbeauty.shared.data.mapper.profile.IProfileMapper
 import com.bunbeauty.shared.data.mapper.user.IUserMapper
 import com.bunbeauty.shared.data.network.api.NetworkConnector
+import com.bunbeauty.shared.data.network.model.NotificationOpenedRequest
+import com.bunbeauty.shared.data.network.model.UpdateNotificationPermissionRequest
 import com.bunbeauty.shared.data.network.model.UpdateNotificationTokenRequest
 import com.bunbeauty.shared.data.network.model.profile.get.ProfileServer
 import com.bunbeauty.shared.data.network.model.profile.patch.PatchUserServer
@@ -113,6 +115,30 @@ class UserRepository(
                     UpdateNotificationTokenRequest(
                         token = notificationToken,
                     ),
+                token = token,
+            )
+        }
+    }
+
+    override fun updateNotificationPermission(enabled: Boolean) {
+        launch {
+            updateNotificationPermissionSuspend(enabled)
+        }
+    }
+
+    override suspend fun updateNotificationPermissionSuspend(enabled: Boolean) {
+        dataStoreRepo.getToken()?.let { token ->
+            networkConnector.putNotificationPermission(
+                request = UpdateNotificationPermissionRequest(enabled),
+                token = token,
+            )
+        }
+    }
+
+    override suspend fun markNotificationOpened(notificationId: String) {
+        dataStoreRepo.getToken()?.let { token ->
+            networkConnector.postNotificationOpened(
+                request = NotificationOpenedRequest(notificationId),
                 token = token,
             )
         }

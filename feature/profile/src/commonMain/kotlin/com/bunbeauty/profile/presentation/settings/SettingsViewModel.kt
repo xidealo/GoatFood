@@ -7,8 +7,10 @@ import com.bunbeauty.core.domain.DisableUserUseCase
 import com.bunbeauty.core.domain.city.GetCityListUseCase
 import com.bunbeauty.core.domain.city.ObserveSelectedCityUseCase
 import com.bunbeauty.core.domain.city.SaveSelectedCityUseCase
+import com.bunbeauty.core.domain.repo.SettingsRepo
 import com.bunbeauty.core.domain.settings.ObserveSettingsUseCase
 import com.bunbeauty.core.domain.user.IUserInteractor
+import com.bunbeauty.core.domain.notification.NotificationSettingsHandler
 import com.bunbeauty.core.extension.launchSafe
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.Job
@@ -25,6 +27,8 @@ class SettingsViewModel(
     private val disableUserUseCase: DisableUserUseCase,
     private val userInteractor: IUserInteractor,
     private val analyticService: AnalyticService,
+    private val settingsRepository: SettingsRepo,
+    private val notificationSettingsHandler: NotificationSettingsHandler,
 ) : SharedStateViewModel<SettingsState.DataState, SettingsState.Action, SettingsState.Event>(
         SettingsState.DataState(),
     ) {
@@ -49,6 +53,8 @@ class SettingsViewModel(
             SettingsState.Action.DisableUser -> onDisableUserClicked()
             SettingsState.Action.CloseDisableUserBottomSheet -> onCloseDisableUserClickedBS()
             SettingsState.Action.DisableUserBottomSheet -> disableUser()
+            is SettingsState.Action.OnMarketingNotificationsChanged ->
+                updateMarketingNotifications(action.enabled)
         }
     }
 
@@ -114,6 +120,7 @@ class SettingsViewModel(
                     )
                 }
                 observeSettingsJob?.cancel()
+                notificationSettingsHandler.setNewsSubscription(enabled = false)
                 userInteractor.clearUserCache()
                 addEvent {
                     SettingsState.Event.Back
@@ -151,6 +158,26 @@ class SettingsViewModel(
             disableUserUseCase()
             logout()
         }
+    }
+
+    private fun updateMarketingNotifications(enabled: Boolean) {
+        sharedScope.launchSafe(
+            block = {
+                val settings = settingsRepository.updateMarketingNotifications(enabled)
+                if (settings == null) {
+                    addEvent { SettingsState.Event.ShowNotificationSettingsFailedEvent }
+                } else {
+                    setState { copy(settings = settings) }
+                    notificationSettingsHandler.setNewsSubscription(settings.marketingNotificationsEnabled)
+                    if (enabled) {
+                        notificationSettingsHandler.requestPermission()
+                    }
+                }
+            },
+            onError = {
+                addEvent { SettingsState.Event.ShowNotificationSettingsFailedEvent }
+            },
+        )
     }
 
     @OptIn(ExperimentalCoroutinesApi::class)

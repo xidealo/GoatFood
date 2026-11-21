@@ -48,6 +48,17 @@ class SettingsRepository(
         )
     }
 
+    override suspend fun updateMarketingNotifications(enabled: Boolean): Settings? {
+        val token = dataStoreRepo.getToken() ?: return null
+        return networkConnector
+            .patchSettings(token, PatchUserServer(marketingNotificationsEnabled = enabled))
+            .getNullableResult { settingsServer ->
+                val settings = settingsMapper.toSettings(settingsServer)
+                dataStoreRepo.saveSettings(settings)
+                settings
+            }
+    }
+
     override suspend fun updateEmail(email: String): Settings? {
         val token = dataStoreRepo.getToken() ?: return null
         return networkConnector

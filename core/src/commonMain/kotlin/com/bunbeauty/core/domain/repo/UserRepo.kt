@@ -21,4 +21,10 @@ interface UserRepo {
     suspend fun saveUserCafeUuid(cafeUuid: String)
 
     suspend fun updateNotificationTokenSuspend(notificationToken: String)
+
+    fun updateNotificationPermission(enabled: Boolean)
+
+    suspend fun updateNotificationPermissionSuspend(enabled: Boolean)
+
+    suspend fun markNotificationOpened(notificationId: String)
 }

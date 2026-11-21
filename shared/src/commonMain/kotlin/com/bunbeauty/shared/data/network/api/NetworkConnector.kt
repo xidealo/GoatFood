@@ -18,6 +18,8 @@ import com.bunbeauty.shared.data.network.model.RecommendationDataServer
 import com.bunbeauty.shared.data.network.model.SettingsServer
 import com.bunbeauty.shared.data.network.model.StreetServer
 import com.bunbeauty.shared.data.network.model.SuggestionServer
+import com.bunbeauty.shared.data.network.model.NotificationOpenedRequest
+import com.bunbeauty.shared.data.network.model.UpdateNotificationPermissionRequest
 import com.bunbeauty.shared.data.network.model.UpdateNotificationTokenRequest
 import com.bunbeauty.shared.data.network.model.UserAddressPostServer
 import com.bunbeauty.shared.data.network.model.login.AuthResponseServer
@@ -102,6 +104,16 @@ interface NetworkConnector {
 
     suspend fun putNotificationToken(
         updateNotificationTokenRequest: UpdateNotificationTokenRequest,
+        token: String,
+    ): ApiResult<Unit>
+
+    suspend fun putNotificationPermission(
+        request: UpdateNotificationPermissionRequest,
+        token: String,
+    ): ApiResult<Unit>
+
+    suspend fun postNotificationOpened(
+        request: NotificationOpenedRequest,
         token: String,
     ): ApiResult<Unit>
 

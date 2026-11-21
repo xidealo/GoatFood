@@ -13,6 +13,7 @@ import com.bunbeauty.shared.data.DataStoreRepository
 import com.bunbeauty.shared.data.DatabaseDriverFactory
 import com.bunbeauty.shared.data.UuidGenerator
 import com.bunbeauty.shared.data.createFoodDeliveryDatabase
+import com.bunbeauty.shared.domain.feature.notification.NotificationPermissionRequester
 import com.bunbeauty.shared.data.network.logger.AndroidNetworkErrorLogger
 import com.bunbeauty.shared.data.network.logger.NetworkErrorLogger
 import org.koin.dsl.module
@@ -46,6 +47,7 @@ actual fun platformModule() =
                 userRepository = get(),
             )
         }
+        single { NotificationPermissionRequester() }
 
         single {
             OpenExternalSource(

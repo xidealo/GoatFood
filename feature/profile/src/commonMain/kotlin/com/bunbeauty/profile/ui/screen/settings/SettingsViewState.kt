@@ -8,6 +8,7 @@ import kotlinx.collections.immutable.ImmutableList
 data class SettingsViewState(
     val phoneNumber: String,
     val selectedCityName: String,
+    val marketingNotificationsEnabled: Boolean = true,
     val state: State,
     val logoutUI: LogoutBottomSheetUI,
     val cityListBottomSheetUI: CityListBottomSheetUI,

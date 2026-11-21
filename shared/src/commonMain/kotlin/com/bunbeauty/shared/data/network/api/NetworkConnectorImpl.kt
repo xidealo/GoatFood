@@ -29,6 +29,8 @@ import com.bunbeauty.shared.data.network.model.RecommendationDataServer
 import com.bunbeauty.shared.data.network.model.SettingsServer
 import com.bunbeauty.shared.data.network.model.StreetServer
 import com.bunbeauty.shared.data.network.model.SuggestionServer
+import com.bunbeauty.shared.data.network.model.NotificationOpenedRequest
+import com.bunbeauty.shared.data.network.model.UpdateNotificationPermissionRequest
 import com.bunbeauty.shared.data.network.model.UpdateNotificationTokenRequest
 import com.bunbeauty.shared.data.network.model.UserAddressPostServer
 import com.bunbeauty.shared.data.network.model.login.AuthResponseServer
@@ -273,6 +275,16 @@ internal class NetworkConnectorImpl(
             parameters = mapOf(COMPANY_UUID_PARAMETER to companyUuidProvider.companyUuid),
         )
 
+    override suspend fun postNotificationOpened(
+        request: NotificationOpenedRequest,
+        token: String,
+    ): ApiResult<Unit> =
+        postData(
+            path = "client/notification/opened",
+            body = request,
+            token = token,
+        )
+
     // PATCH
 
     override suspend fun patchSettings(
@@ -286,6 +298,16 @@ internal class NetworkConnectorImpl(
         )
 
     // PUT
+
+    override suspend fun putNotificationPermission(
+        request: UpdateNotificationPermissionRequest,
+        token: String,
+    ): ApiResult<Unit> =
+        putData(
+            path = "client/notification_permission",
+            body = request,
+            token = token,
+        )
 
     override suspend fun putCodeResend(uuid: String): ApiResult<Unit> =
         putData(
