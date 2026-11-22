@@ -36,6 +36,7 @@ class SettingsViewModel(
         SettingsState.DataState(),
     ) {
     private var observeSettingsJob: Job? = null
+    private var marketingNotificationsUpdateId = 0L
 
     private companion object {
         val EMAIL_REGEX = Regex("^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$")
@@ -231,24 +232,51 @@ class SettingsViewModel(
         )
     }
 
+    private fun Settings.withMarketingNotifications(enabled: Boolean): Settings {
+        return Settings(
+            userUuid = userUuid,
+            phoneNumber = phoneNumber,
+            email = email,
+            personalDiscountPercent = personalDiscountPercent,
+            marketingNotificationsEnabled = enabled,
+            systemNotificationsEnabled = systemNotificationsEnabled,
+        )
+    }
+
     private fun updateMarketingNotifications(enabled: Boolean) {
+        val updateId = ++marketingNotificationsUpdateId
+        val previousEnabled = dataState.value.settings?.marketingNotificationsEnabled ?: true
+        setState {
+            copy(settings = settings?.withMarketingNotifications(enabled))
+        }
         sharedScope.launchSafe(
             block = {
                 val settings = settingsRepository.updateMarketingNotifications(enabled)
-                if (settings == null) {
-                    addEvent { SettingsState.Event.ShowNotificationSettingsFailedEvent }
-                } else {
-                    setState { copy(settings = settings) }
-                    notificationSettingsHandler.setNewsSubscription(settings.marketingNotificationsEnabled)
-                    if (enabled) {
-                        notificationSettingsHandler.requestPermission()
+                if (updateId == marketingNotificationsUpdateId) {
+                    if (settings == null) {
+                        rollbackMarketingNotifications(previousEnabled)
+                    } else {
+                        setState { copy(settings = settings) }
+                        notificationSettingsHandler.setNewsSubscription(settings.marketingNotificationsEnabled)
+                        if (enabled) {
+                            notificationSettingsHandler.requestPermission()
+                        }
                     }
                 }
             },
             onError = {
-                addEvent { SettingsState.Event.ShowNotificationSettingsFailedEvent }
+                if (updateId == marketingNotificationsUpdateId) {
+                    rollbackMarketingNotifications(previousEnabled)
+                }
             },
         )
+    }
+
+    private fun rollbackMarketingNotifications(enabled: Boolean) {
+        setState {
+            copy(settings = settings?.withMarketingNotifications(enabled))
+        }
+        addEvent { SettingsState.Event.ShowNotificationSettingsFailedEvent }
     }
 
     @OptIn(ExperimentalCoroutinesApi::class)
