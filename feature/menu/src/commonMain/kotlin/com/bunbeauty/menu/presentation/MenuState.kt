@@ -84,5 +84,9 @@ interface MenuState {
         data object OpenProfile : Event
 
         data object OpenConsumerCart : Event
+
+        data class RequestAppReview(
+            val orderUuid: String,
+        ) : Event
     }
 }

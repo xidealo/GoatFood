@@ -19,6 +19,7 @@ fun menuFeatureModule() =
                 getLastOrderUseCase = get(),
                 observeTokenUseCase = get(),
                 getFavoriteMenuProductsUseCase = get(),
+                getLastDeliveredOrderUseCase = get(),
             )
         }
     }

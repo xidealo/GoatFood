@@ -9,11 +9,14 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.compose.LifecycleStartEffect
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.bunbeauty.core.Constants.FAB_SNACKBAR_BOTTOM_PADDING
+import com.bunbeauty.core.domain.review.AppReviewManager
+import com.bunbeauty.core.domain.review.AppReviewSource
 import com.bunbeauty.core.model.ProductDetailsOpenedFrom
 import com.bunbeauty.menu.presentation.MenuState
 import com.bunbeauty.menu.presentation.MenuViewModel
 import com.bunbeauty.menu.ui.mapper.mapState
 import org.jetbrains.compose.resources.getString
+import org.koin.compose.koinInject
 import org.koin.compose.viewmodel.koinViewModel
 import papakarlo.designsystem.generated.resources.Res
 import papakarlo.designsystem.generated.resources.error_consumer_cart_add_product
@@ -70,6 +73,8 @@ fun MenuRoute(
         }
     }
 
+    val appReviewManager = koinInject<AppReviewManager>()
+
     MenuEffect(
         effects = effects,
         goToProductDetailsFragment = goToProductDetailsFragment,
@@ -79,6 +84,7 @@ fun MenuRoute(
         consumeEffects = consumeEffects,
         showErrorMessage = showErrorMessage,
         showInfoMessage = showInfoMessage,
+        appReviewManager = appReviewManager,
     )
 
     MenuScreen(
@@ -102,6 +108,7 @@ internal fun MenuEffect(
     consumeEffects: () -> Unit,
     showErrorMessage: (String) -> Unit,
     showInfoMessage: (String, Int) -> Unit,
+    appReviewManager: AppReviewManager,
 ) {
     LaunchedEffect(effects) {
         effects.forEach { effect ->
@@ -136,6 +143,12 @@ internal fun MenuEffect(
                 MenuState.Event.OpenConsumerCart -> {
                     goToConsumerCart()
                 }
+
+                is MenuState.Event.RequestAppReview ->
+                    appReviewManager.request(
+                        orderUuid = effect.orderUuid,
+                        source = AppReviewSource.MENU,
+                    )
             }
         }
         consumeEffects()

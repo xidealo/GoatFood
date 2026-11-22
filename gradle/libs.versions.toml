@@ -29,6 +29,7 @@ ktLint = "14.2.0"
 tripletPlay = "4.1.1"
 compose = "1.11.1"
 firebaseCrashlyticsKtx = "20.0.6"
+playReview = "2.0.2"
 
 [libraries]
 appcompat = { module = "androidx.appcompat:appcompat", version.ref = "appCompact" }
@@ -56,6 +57,7 @@ desugar-jdk-libs = { module = "com.android.tools:desugar_jdk_libs", version.ref 
 firebase-bom = { module = "com.google.firebase:firebase-bom", version.ref = "firebase" }
 firebase-crashlytics = { module = "com.google.firebase:firebase-crashlytics" }
 firebase-analytics = { module = "com.google.firebase:firebase-analytics" }
+play-review-ktx = { module = "com.google.android.play:review-ktx", version.ref = "playReview" }
 appmetrica-analytics = { module = "io.appmetrica.analytics:analytics", version.ref = "appmetrica" }
 firebase-messaging = { module = "com.google.firebase:firebase-messaging" }
 compose-bom = { module = "androidx.compose:compose-bom", version.ref = "composeBom" }

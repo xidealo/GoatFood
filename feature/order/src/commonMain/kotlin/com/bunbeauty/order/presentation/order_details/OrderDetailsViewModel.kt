@@ -7,6 +7,7 @@ import com.bunbeauty.core.domain.order.ObserveOrderUseCase
 import com.bunbeauty.core.domain.order.StopObserveOrdersUseCase
 import com.bunbeauty.core.extension.launchSafe
 import com.bunbeauty.core.model.order.Order
+import com.bunbeauty.core.model.order.OrderStatus
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.collectLatest
 
@@ -29,6 +30,7 @@ class OrderDetailsViewModel(
     ) {
     private var observeOrderJob: Job? = null
     private var orderObservationUuid: String? = null
+    private var appReviewRequestedOrderUuid: String? = null
 
     override fun reduce(
         action: OrderDetails.Action,
@@ -64,6 +66,7 @@ class OrderDetailsViewModel(
                     orderObservationUuid = uuid
                     orderFlow.collectLatest { order ->
                         if (order != null) {
+                            requestAppReview(order)
                             setState {
                                 copy(
                                     orderUuid = orderUuid,
@@ -99,6 +102,15 @@ class OrderDetailsViewModel(
                     }
                 },
             )
+    }
+
+    private fun requestAppReview(order: Order) {
+        if (order.status == OrderStatus.DELIVERED && appReviewRequestedOrderUuid != order.uuid) {
+            appReviewRequestedOrderUuid = order.uuid
+            addEvent {
+                OrderDetails.Event.RequestAppReview(orderUuid = order.uuid)
+            }
+        }
     }
 
     private fun stopObserveOrders() {

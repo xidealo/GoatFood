@@ -21,6 +21,8 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.LifecycleStartEffect
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.bunbeauty.core.domain.review.AppReviewManager
+import com.bunbeauty.core.domain.review.AppReviewSource
 import com.bunbeauty.core.model.order.OrderStatus
 import com.bunbeauty.designsystem.theme.FoodDeliveryTheme
 import com.bunbeauty.designsystem.theme.bold
@@ -40,6 +42,7 @@ import com.bunbeauty.order.ui.ui.OrderProductItem
 import com.bunbeauty.order.ui.ui.OrderStatusBar
 import org.jetbrains.compose.resources.stringResource
 import org.jetbrains.compose.ui.tooling.preview.Preview
+import org.koin.compose.koinInject
 import org.koin.compose.viewmodel.koinViewModel
 import papakarlo.designsystem.generated.resources.Res
 import papakarlo.designsystem.generated.resources.error_order_details_discount
@@ -82,11 +85,13 @@ fun OrderDetailsRoute(
                 viewModel.consumeEvents(effects)
             }
         }
+    val appReviewManager = koinInject<AppReviewManager>()
 
     OrderDetailsEffect(
         effects = effects,
         back = back,
         consumeEffects = consumeEffects,
+        appReviewManager = appReviewManager,
     )
 
     OrderDetailsScreen(
@@ -100,11 +105,17 @@ fun OrderDetailsEffect(
     effects: List<OrderDetails.Event>,
     back: () -> Unit,
     consumeEffects: () -> Unit,
+    appReviewManager: AppReviewManager,
 ) {
     LaunchedEffect(effects) {
         effects.forEach { effect ->
             when (effect) {
                 OrderDetails.Event.Back -> back()
+                is OrderDetails.Event.RequestAppReview ->
+                    appReviewManager.request(
+                        orderUuid = effect.orderUuid,
+                        source = AppReviewSource.ORDER_DETAILS,
+                    )
             }
         }
         consumeEffects()

@@ -71,5 +71,9 @@ interface OrderDetails {
 
     sealed interface Event : BaseEvent {
         data object Back : Event
+
+        data class RequestAppReview(
+            val orderUuid: String,
+        ) : Event
     }
 }
