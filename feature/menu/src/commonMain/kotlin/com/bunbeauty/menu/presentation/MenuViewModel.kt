@@ -13,6 +13,7 @@ import com.bunbeauty.core.domain.discount.GetDiscountUseCase
 import com.bunbeauty.core.domain.favorite.GetFavoriteMenuProductsUseCase
 import com.bunbeauty.core.domain.menu_product.AddMenuProductUseCase
 import com.bunbeauty.core.domain.menu_product.IMenuProductInteractor
+import com.bunbeauty.core.domain.order.GetLastDeliveredOrderUseCase
 import com.bunbeauty.core.domain.order.GetLastOrderUseCase
 import com.bunbeauty.core.domain.order.ObserveLastOrderUseCase
 import com.bunbeauty.core.domain.order.StopObserveOrdersUseCase
@@ -55,6 +56,7 @@ class MenuViewModel(
     private val getLastOrderUseCase: GetLastOrderUseCase,
     private val observeTokenUseCase: ObserveTokenUseCase,
     private val getFavoriteMenuProductsUseCase: GetFavoriteMenuProductsUseCase,
+    private val getLastDeliveredOrderUseCase: GetLastDeliveredOrderUseCase,
 ) : SharedStateViewModel<MenuState.DataState, MenuState.Action, MenuState.Event>(
         initDataState =
             MenuState.DataState(
@@ -71,6 +73,7 @@ class MenuViewModel(
 
     private var observeLastOrderJob: Job? = null
     private var orderObservationUuid: String? = null
+    private var isAppReviewChecked = false
 
     init {
         getMenu()
@@ -238,9 +241,29 @@ class MenuViewModel(
                                 ),
                         ),
                 )
+                checkAppReview()
             },
             onError = { throwable ->
                 handleError(throwable)
+            },
+        )
+    }
+
+    private fun checkAppReview() {
+        if (isAppReviewChecked) {
+            return
+        }
+        isAppReviewChecked = true
+        sharedScope.launchSafe(
+            block = {
+                getLastDeliveredOrderUseCase()?.let { order ->
+                    addEvent {
+                        MenuState.Event.RequestAppReview(orderUuid = order.uuid)
+                    }
+                }
+            },
+            onError = { throwable ->
+                Logger.logE(MAIN_MENU_VIEW_MODEL_TAG, throwable.stackTraceToString())
             },
         )
     }

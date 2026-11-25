@@ -21,6 +21,10 @@ import com.bunbeauty.analytic.event.order.OrderCreateSuccessEvent
 import com.bunbeauty.analytic.event.order.OrderDeliveryToggleEvent
 import com.bunbeauty.analytic.event.recommendation.AddRecommendationProductClickEvent
 import com.bunbeauty.analytic.event.recommendation.AddRecommendationProductDetailsClickEvent
+import com.bunbeauty.analytic.event.review.AppReviewErrorEvent
+import com.bunbeauty.analytic.event.review.AppReviewFinishEvent
+import com.bunbeauty.analytic.event.review.AppReviewLaunchEvent
+import com.bunbeauty.analytic.event.review.AppReviewRequestEvent
 import com.bunbeauty.analytic.parameter.MenuProductUuidEventParameter
 import com.bunbeauty.analytic.parameter.TimeParameter
 import kotlin.test.Test
@@ -76,6 +80,10 @@ class FoodDeliveryEventNameTest {
                 OrderCreateFailEvent(error = "unknown"),
                 OrderDeliveryToggleEvent(isDelivery = false),
                 NotificationOpenEvent(campaign = "client_return", touch = "1", variant = "PERSONAL"),
+                AppReviewRequestEvent(source = "menu"),
+                AppReviewLaunchEvent(source = "menu"),
+                AppReviewFinishEvent(source = "order_details"),
+                AppReviewErrorEvent(source = "menu", stage = "request", error = "unknown"),
             )
 
         events.forEach { event ->

@@ -89,6 +89,7 @@ kotlin {
             dependencies {
                 implementation(libs.ktor.client.okhttp)
                 implementation(libs.datastore.preferences)
+                implementation(libs.play.review.ktx)
                 implementation(libs.lifecycle.viewmodel.ktx)
 
                 implementation(libs.activity.compose)
