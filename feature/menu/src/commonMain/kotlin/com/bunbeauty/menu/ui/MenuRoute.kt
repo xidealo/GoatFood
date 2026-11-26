@@ -6,7 +6,6 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.hapticfeedback.HapticFeedbackType
-import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.compose.LifecycleStartEffect
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -42,7 +41,7 @@ fun MenuRoute(
     showInfoMessage: (String, Int) -> Unit,
 ) {
     val dataState by viewModel.dataState.collectAsStateWithLifecycle()
-    val hapticFeedback = LocalHapticFeedback.current
+    val hapticFeedback = rememberCategoryHapticFeedback()
 
     val onAction =
         remember(viewModel, hapticFeedback) {
