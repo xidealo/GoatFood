@@ -38,6 +38,7 @@ import com.bunbeauty.papakarlo.R
 import com.bunbeauty.shared.domain.feature.notification.NotificationNavigation
 import com.bunbeauty.shared.domain.feature.notification.NotificationOpen
 import com.bunbeauty.shared.domain.feature.notification.NotificationPermissionRequester
+import com.bunbeauty.shared.domain.feature.review.AndroidAppReviewManager
 import com.bunbeauty.shared.presentation.MainViewModel
 import com.bunbeauty.shared.ui.main.IMessageHost
 import com.bunbeauty.shared.ui.screen.main.MainScreen
@@ -50,6 +51,7 @@ class MainActivity :
     val viewModel: MainViewModel by viewModel()
     private val notificationNavigation: NotificationNavigation by inject()
     private val notificationPermissionRequester: NotificationPermissionRequester by inject()
+    private val androidAppReviewManager: AndroidAppReviewManager by inject()
     private val userRepository: UserRepo by inject()
 
     private val requestPermissionLauncher by lazy {
@@ -60,6 +62,7 @@ class MainActivity :
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        androidAppReviewManager.register(this)
 
         enableEdgeToEdge(
             navigationBarStyle =
@@ -117,6 +120,7 @@ class MainActivity :
 
     override fun onDestroy() {
         notificationPermissionRequester.unregister()
+        androidAppReviewManager.unregister(this)
         super.onDestroy()
     }
 

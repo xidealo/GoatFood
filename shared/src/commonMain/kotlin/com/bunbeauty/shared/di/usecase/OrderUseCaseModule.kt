@@ -2,6 +2,7 @@ package com.bunbeauty.shared.di.usecase
 
 import com.bunbeauty.core.domain.order.CreateOrderUseCase
 import com.bunbeauty.core.domain.order.GetExtendedCommentUseCase
+import com.bunbeauty.core.domain.order.GetLastDeliveredOrderUseCase
 import com.bunbeauty.core.domain.order.GetLastOrderUseCase
 import com.bunbeauty.core.domain.order.GetWithoutUtensilsUseCase
 import com.bunbeauty.core.domain.order.ObserveLastOrderUseCase
@@ -53,6 +54,11 @@ internal fun orderUseCaseModule() =
             GetLastOrderUseCase(
                 orderRepo = get(),
                 takeInProgressLightOrderUseCase = get(),
+            )
+        }
+        factory {
+            GetLastDeliveredOrderUseCase(
+                orderRepo = get(),
             )
         }
         factory {

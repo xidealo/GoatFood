@@ -1,5 +1,6 @@
 plugins {
     alias(libs.plugins.client.compose.multiplatform.feature)
+    alias(libs.plugins.mokkery)
 }
 
 kotlin {
@@ -27,6 +28,12 @@ kotlin {
                 implementation(libs.bundles.navigation)
                 implementation(libs.bundles.di)
                 implementation(libs.bundles.coil)
+            }
+        }
+        val commonTest by getting {
+            dependencies {
+                implementation(libs.kotlinx.coroutines.test)
+                implementation(kotlin("test"))
             }
         }
 

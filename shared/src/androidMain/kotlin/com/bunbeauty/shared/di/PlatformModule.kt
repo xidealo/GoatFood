@@ -7,15 +7,17 @@ import com.bunbeauty.auth.domain.UpdateNotificationUseCase
 import com.bunbeauty.core.OpenExternalSource
 import com.bunbeauty.core.buildVersionQualifier
 import com.bunbeauty.core.domain.link.GetLinkListUseCase
+import com.bunbeauty.core.domain.review.AppReviewManager
 import com.bunbeauty.shared.DataStoreRepo
 import com.bunbeauty.shared.NetworkUtil
 import com.bunbeauty.shared.data.DataStoreRepository
 import com.bunbeauty.shared.data.DatabaseDriverFactory
 import com.bunbeauty.shared.data.UuidGenerator
 import com.bunbeauty.shared.data.createFoodDeliveryDatabase
-import com.bunbeauty.shared.domain.feature.notification.NotificationPermissionRequester
 import com.bunbeauty.shared.data.network.logger.AndroidNetworkErrorLogger
 import com.bunbeauty.shared.data.network.logger.NetworkErrorLogger
+import com.bunbeauty.shared.domain.feature.notification.NotificationPermissionRequester
+import com.bunbeauty.shared.domain.feature.review.AndroidAppReviewManager
 import org.koin.dsl.module
 
 actual fun platformModule() =
@@ -48,6 +50,15 @@ actual fun platformModule() =
             )
         }
         single { NotificationPermissionRequester() }
+        single {
+            AndroidAppReviewManager(
+                context = get(),
+                analyticService = get(),
+            )
+        }
+        single<AppReviewManager> {
+            get<AndroidAppReviewManager>()
+        }
 
         single {
             OpenExternalSource(
