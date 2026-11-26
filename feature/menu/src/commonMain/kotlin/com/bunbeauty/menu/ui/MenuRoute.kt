@@ -48,7 +48,7 @@ fun MenuRoute(
         remember(viewModel, hapticFeedback) {
             { action: MenuState.Action ->
                 if (action is MenuState.Action.OnCategoryClicked) {
-                    hapticFeedback.performHapticFeedback(HapticFeedbackType.TextHandleMove)
+                    hapticFeedback.performHapticFeedback(HapticFeedbackType.SegmentTick)
                 }
                 viewModel.onAction(action)
             }
